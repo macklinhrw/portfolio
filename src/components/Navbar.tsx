@@ -9,6 +9,8 @@ import {
   Button,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import StyledDiv from "./StyledDiv";
+
 
 const LinkItem = ({ href, path, _target, children, ...props }) => {
   const active = path === href;
@@ -28,6 +30,18 @@ const LinkItem = ({ href, path, _target, children, ...props }) => {
   );
 };
 
+const NavDelay = ({ children, delay = 0 }) => {
+  return (
+    <StyledDiv
+      initial={{ y: -15, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, delay }}
+    >
+      {children}
+    </StyledDiv>
+  );
+};
+
 const Navbar = (props) => {
   const { path } = props;
 
@@ -42,7 +56,7 @@ const Navbar = (props) => {
       <Container
         display="flex"
         p={2}
-        maxW="container.md"
+        maxW="container.xl"
         wrap="wrap"
         justify="space-between"
       >
@@ -52,19 +66,29 @@ const Navbar = (props) => {
           </Heading>
         </Flex>
         <Stack alignItems="center" ml="auto" spacing={5} direction="row">
-          <LinkItem href="#about" path={path} _target="">
-            About
-          </LinkItem>
-          <LinkItem href="#experience" path={path} _target="">
-            Experience
-          </LinkItem>
-          <LinkItem href="#projects" path={path} _target="">
-            Projects
-          </LinkItem>
-          <LinkItem href="#contact" path={path} _target="">
-            Contact
-          </LinkItem>
-          <Button variant="outline">Resume</Button>
+          <NavDelay delay={0.1}>
+            <LinkItem href="#about" path={path} _target="">
+              About
+            </LinkItem>
+          </NavDelay>
+          <NavDelay delay={0.2}>
+            <LinkItem href="#about" path={path} _target="">
+              Experience
+            </LinkItem>
+          </NavDelay>
+          <NavDelay delay={0.3}>
+            <LinkItem href="#about" path={path} _target="">
+              Projects
+            </LinkItem>
+          </NavDelay>
+          <NavDelay delay={0.4}>
+            <LinkItem href="#about" path={path} _target="">
+              Contact
+            </LinkItem>
+          </NavDelay>
+          <NavDelay delay={0.5}>
+            <Button variant="outline">Resume</Button>
+          </NavDelay>
         </Stack>
       </Container>
     </Box>

@@ -1,15 +1,9 @@
-import { motion, MotionProps } from "framer-motion";
 import {
-  Box,
   Text,
   Heading,
-  chakra,
-  shouldForwardProp,
 } from "@chakra-ui/react";
+import StyledDiv from "./StyledDiv"
 
-const StyledDiv: any = chakra(motion.div, {
-  shouldForwardProp: (prop) => shouldForwardProp(prop) || prop === "transition",
-});
 
 const Hero = () => {
   return (
@@ -19,7 +13,7 @@ const Hero = () => {
         p={3}
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.1 }}
+        transition={{ duration: 0.8, delay: 1 }}
       >
         <Heading as="h2" variant="">
           Macklin Reeve-Wilson
