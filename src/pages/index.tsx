@@ -1,11 +1,15 @@
-import { Container } from "@chakra-ui/react"
+import { Container, Box } from "@chakra-ui/react"
 import Hero from "../components/Hero"
+import Navbar from "../components/Navbar";
 
 const Page = () => {
   return (
-    <Container>
-      <Hero />
-    </Container>
+    <Box>
+      <Navbar />
+      <Container my={36}>
+        <Hero />
+      </Container>
+    </Box>
   )
 }
 
