@@ -14,21 +14,23 @@ const StyledDiv: any = chakra(motion.div, {
 const Hero = () => {
   return (
     <div>
-      <Box borderRadius="lg" p={3} delay={0.1}>
-        <Heading as="h2" variant="" my={3}>
+      <StyledDiv
+        borderRadius="lg"
+        p={3}
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.1 }}
+      >
+        <Heading as="h2" variant="">
           Macklin Reeve-Wilson
         </Heading>
         <Heading as="h2" color="gray.400">
           Software Engineer
         </Heading>
-        <motion.div animate={{}}></motion.div>
-        <StyledDiv
-          animate={{ x: 100 }}
-          transition={{ type: "spring", stiffness: 100 }}
-        >
-          Test
-        </StyledDiv>
-      </Box>
+        <Text wordBreak="break-word" mt={4} color="gray.400" fontSize="lg">
+          I'm a design-centric Software Engineer.
+        </Text>
+      </StyledDiv>
     </div>
   );
 };
