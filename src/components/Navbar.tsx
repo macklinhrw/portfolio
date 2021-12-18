@@ -11,7 +11,6 @@ import {
 import NextLink from "next/link";
 import StyledDiv from "./StyledDiv";
 
-
 const LinkItem = ({ href, path, _target, children, ...props }) => {
   const active = path === href;
   const inactiveColor = useColorModeValue("gray200", "whiteAlpha.900");
@@ -35,7 +34,7 @@ const NavDelay = ({ children, delay = 0 }) => {
     <StyledDiv
       initial={{ y: -15, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, delay }}
+      transition={{ duration: 0.2, delay }}
     >
       {children}
     </StyledDiv>
@@ -60,34 +59,38 @@ const Navbar = (props) => {
         wrap="wrap"
         justify="space-between"
       >
-        <Flex align="center">
+        <StyledDiv
+          initial={{ x: 0, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
           <Heading as="h1" size="md" letterSpacing="tighter">
             Macklin
           </Heading>
-        </Flex>
+        </StyledDiv>
         <Stack alignItems="center" ml="auto" spacing={5} direction="row">
-          <NavDelay delay={0.1}>
+          <NavDelay delay={0.2}>
             <LinkItem href="#about" path={path} _target="">
               About
             </LinkItem>
           </NavDelay>
-          <NavDelay delay={0.2}>
-            <LinkItem href="#about" path={path} _target="">
+          <NavDelay delay={0.3}>
+            <LinkItem href="#experience" path={path} _target="">
               Experience
             </LinkItem>
           </NavDelay>
-          <NavDelay delay={0.3}>
-            <LinkItem href="#about" path={path} _target="">
+          <NavDelay delay={0.4}>
+            <LinkItem href="#projects" path={path} _target="">
               Projects
             </LinkItem>
           </NavDelay>
-          <NavDelay delay={0.4}>
-            <LinkItem href="#about" path={path} _target="">
+          <NavDelay delay={0.5}>
+            <LinkItem href="#contact" path={path} _target="">
               Contact
             </LinkItem>
           </NavDelay>
-          <NavDelay delay={0.5}>
-            <Button variant="outline">Resume</Button>
+          <NavDelay delay={0.6}>
+            <Button variant="outline">Résumé</Button>
           </NavDelay>
         </Stack>
       </Container>

@@ -6,7 +6,7 @@ const Page = () => {
   return (
     <Box>
       <Navbar />
-      <Container my={36}>
+      <Container my={36} maxW="container.md">
         <Hero />
       </Container>
     </Box>
