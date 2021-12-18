@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import StyledDiv from "./StyledDiv";
+import Logo from "./Logo";
 
 const LinkItem = ({ href, path, _target, children, ...props }) => {
   const active = path === href;
@@ -58,7 +59,17 @@ const Navbar = (props) => {
         maxW="container.xl"
         wrap="wrap"
         justify="space-between"
+        alignItems="center"
       >
+        <StyledDiv
+          initial={{ x: 0, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+        <Box mr={4} pt={2} align="center">
+          <Logo />
+        </Box>
+        </StyledDiv>
         <StyledDiv
           initial={{ x: 0, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
