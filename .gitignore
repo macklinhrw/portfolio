@@ -28,3 +28,6 @@ captures/
 .impeccable/
 public/mockups/
 PRODUCT.md
+
+# Cloudflare build output
+.cloudflare/
