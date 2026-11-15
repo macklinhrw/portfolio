@@ -1,0 +1,121 @@
+---
+// A sparse field of faint, still particles behind the page, like a dim star field. Particles
+// near the pointer brighten slightly, with a soft halo, and fade back as it moves away. They
+// never move. Nothing reacts on touch screens or when the visitor asks for reduced motion.
+---
+
+<canvas class="particles" aria-hidden="true"></canvas>
+
+<script>
+  /** One particle per this many square pixels of viewport, up to MAX. */
+  const AREA_PER_PARTICLE = 7500;
+  const MAX = 320;
+  /** How far from the pointer particles brighten, and by how much at the centre. */
+  const RADIUS = 240;
+  const BRIGHTEN = 0.42;
+  /** Share of the remaining change a particle's brightness covers each frame. */
+  const EASE = 0.08;
+
+  type Particle = { x: number; y: number; r: number; a: number; glow: number; target: number };
+
+  const canvas = document.querySelector<HTMLCanvasElement>("canvas.particles");
+  const ctx = canvas?.getContext("2d");
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  if (canvas && ctx) {
+    let width = 0;
+    let height = 0;
+    let particles: Particle[] = [];
+    let pointer: { x: number; y: number } | null = null;
+    let frame = 0;
+
+    const rand = (min: number, max: number) => min + Math.random() * (max - min);
+
+    const seed = (): Particle => ({
+      x: rand(0, width),
+      y: rand(0, height),
+      r: rand(0.6, 1.5),
+      a: rand(0.08, 0.22),
+      glow: 0,
+      target: 0,
+    });
+
+    function resize() {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      width = innerWidth;
+      height = innerHeight;
+      canvas!.width = Math.round(width * dpr);
+      canvas!.height = Math.round(height * dpr);
+      const count = Math.min(MAX, Math.round((width * height) / AREA_PER_PARTICLE));
+      while (particles.length < count) particles.push(seed());
+      particles.length = count;
+      draw();
+    }
+
+    function draw() {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx!.clearRect(0, 0, width, height);
+      ctx!.fillStyle = "#fff";
+      for (const p of particles) {
+        if (p.glow > 0.01) {
+          // A faint halo around a brightened particle, like a star catching the eye.
+          ctx!.globalAlpha = p.glow * 0.3;
+          ctx!.beginPath();
+          ctx!.arc(p.x, p.y, p.r * 3.6, 0, Math.PI * 2);
+          ctx!.fill();
+        }
+        ctx!.globalAlpha = Math.min(0.7, p.a + p.glow);
+        ctx!.beginPath();
+        ctx!.arc(p.x, p.y, p.r + p.glow * 1.1, 0, Math.PI * 2);
+        ctx!.fill();
+      }
+    }
+
+    function aim() {
+      for (const p of particles) {
+        p.target = 0;
+        if (!pointer) continue;
+        const dist = Math.hypot(pointer.x - p.x, pointer.y - p.y);
+        if (dist < RADIUS) p.target = (1 - dist / RADIUS) ** 1.5 * BRIGHTEN;
+      }
+    }
+
+    /** Ease each particle's brightness toward its target; stop once all have settled. */
+    function step() {
+      let moving = false;
+      for (const p of particles) {
+        p.glow += (p.target - p.glow) * EASE;
+        if (Math.abs(p.target - p.glow) > 0.002) moving = true;
+        else p.glow = p.target;
+      }
+      draw();
+      frame = moving ? requestAnimationFrame(step) : 0;
+    }
+
+    const wake = () => {
+      aim();
+      if (!frame) frame = requestAnimationFrame(step);
+    };
+
+    resize();
+    addEventListener("resize", resize);
+
+    if (finePointer && !reduceMotion) {
+      addEventListener(
+        "pointermove",
+        (event) => {
+          if (event.pointerType !== "mouse") return;
+          pointer = { x: event.clientX, y: event.clientY };
+          wake();
+        },
+        { passive: true },
+      );
+      document.documentElement.addEventListener("pointerleave", () => {
+        pointer = null;
+        wake();
+      });
+    }
+  }
+</script>

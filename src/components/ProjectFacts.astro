@@ -1,0 +1,52 @@
+---
+interface Props {
+  period?: string;
+  platforms?: string;
+  stack: string[];
+  /** The live project's address, if it has one. */
+  url?: string;
+}
+
+const { period, platforms, stack, url } = Astro.props;
+---
+
+{/* The facts beside a project's About text: when, where it runs, what it's built with, and a link */}
+<dl class="project-facts">
+  {
+    period && (
+      <>
+        <dt>When</dt>
+        <dd>{period}</dd>
+      </>
+    )
+  }
+  {
+    platforms && (
+      <>
+        <dt>Platform</dt>
+        <dd>{platforms}</dd>
+      </>
+    )
+  }
+  <dt>Stack</dt>
+  <dd>
+    <span class="flex flex-wrap gap-1.5">
+      {stack.map((tech) => <span class="tech-pill">{tech}</span>)}
+    </span>
+  </dd>
+  {
+    url && (
+      <>
+        <dt>Live</dt>
+        <dd>
+          <a href={url} class="project-facts-link">
+            {new URL(url).hostname}
+            <svg class="project-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 11 11 5M6 5h5v5" />
+            </svg>
+          </a>
+        </dd>
+      </>
+    )
+  }
+</dl>

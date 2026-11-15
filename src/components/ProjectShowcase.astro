@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from "astro:content";
+import MediaCarousel from "@/components/MediaCarousel.astro";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+  class?: string;
+}
+
+const { projects, class: className } = Astro.props;
+/** Home page: one slide per project, each linking to its page. */
+const slides = projects
+  .filter((p) => p.data.showcase)
+  .map((p) => ({ ...p.data.showcase!, caption: p.data.name, href: `/projects/${p.id}`, hue: p.data.hue }));
+---
+
+<MediaCarousel slides={slides} label="Project previews" class:list={["mt-18 lg:mt-24", className]} />

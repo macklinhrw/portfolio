@@ -1,16 +1,194 @@
 ---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import heroImage from "@/assets/hero-fuji.jpg";
+import Layout from "@/layouts/Layout.astro";
+import PostList from "@/components/PostList.astro";
+import ProjectList from "@/components/ProjectList.astro";
+import ProjectShowcase from "@/components/ProjectShowcase.astro";
+import ExperienceList from "@/components/ExperienceList.astro";
+import ThemeToggle from "@/components/ThemeToggle.astro";
+
+const projects = (await getCollection("projects", ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const experience = (await getCollection("experience")).sort((a, b) => a.data.order - b.data.order);
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const sections = [
+  projects.length > 0 && { id: "projects", label: "Projects" },
+  experience.length > 0 && { id: "experience", label: "Experience" },
+  posts.length > 0 && { id: "writing", label: "Writing" },
+].filter((s): s is { id: string; label: string } => Boolean(s));
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Macklin" description="Macklin's portfolio and blog" variant="split">
+  {/* Thin hero: name and one line, full width above the two columns. */}
+  <header
+    class="home-hero relative isolate flex items-start justify-between gap-8 pt-16 pb-16 sm:pt-28 sm:pb-20 lg:pt-24 lg:pb-20"
+  >
+    {/* Hides the star field behind the land: an opaque mountain-shaped layer that stays solid
+        through the hero, then fades the stars back in below it. Under the photo. */}
+    <div class="hero-occluder" aria-hidden="true">
+      <div class="hero-silhouette"></div>
+    </div>
+    {/* Faint photo wash behind the hero, full-bleed, fading into the page. */}
+    <div class="hero-wash" aria-hidden="true">
+      <Image
+        class="hero-photo"
+        src={heroImage}
+        alt=""
+        widths={[960, 1600, 2400]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+    <div>
+      <h1
+        class="text-[34px] leading-[1.1] font-semibold tracking-[-0.035em] text-balance sm:text-[44px]"
+      >
+        Hello, I'm <span class="hero-name">Macklin</span>.
+      </h1>
+      <p
+        class="mt-4 max-w-[50ch] text-[17px] leading-[1.65] text-pretty text-subtle-foreground [text-shadow:0_1px_2px_rgb(0_0_0/0.8),0_0_10px_rgb(0_0_0/0.7),0_0_24px_rgb(0_0_0/0.5)] sm:text-lg"
+      >
+        I'm a software engineer. My lifelong goal is to create experiences that leave a lasting
+        impact.
+      </p>
+    </div>
+    <div class="hidden shrink-0 items-center gap-1 pt-2 lg:flex">
+      <ThemeToggle />
+      <a
+        href="https://github.com/macklinhrw"
+        aria-label="GitHub"
+        class="grid size-8 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-hover hover:text-foreground"
+      >
+        <svg viewBox="0 0 24 24" class="size-[18px]" fill="currentColor" aria-hidden="true">
+          <path
+            d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"
+          />
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  {/* Above the hero layers, which reach down behind the top of the columns. */}
+  <div class="relative z-[1] lg:flex lg:gap-16">
+    {/* Section nav, kept in view while the content scrolls (large screens only). */}
+    <aside class="relative z-10 hidden lg:block lg:w-[280px] lg:shrink-0">
+      <div class="nav-panel sticky top-24">
+        {/* Section nav: quiet full-width rows; the current section gets a filled dot. */}
+        <nav aria-label="Sections">
+          <ul class="flex w-64 flex-col gap-2">
+            {
+              sections.map(({ id, label }) => (
+                <li>
+                  <a
+                    href={`#${id}`}
+                    data-section-link={id}
+                    class="frosted group flex h-11 items-center gap-3 rounded-xl border px-3.5 text-[14.5px] font-medium text-muted-foreground transition-colors hover:border-transparent hover:text-foreground not-aria-[current=true]:hover:bg-hover aria-[current=true]:border-transparent aria-[current=true]:bg-brand/14 aria-[current=true]:hover:border-brand/40 aria-[current=true]:text-brand-foreground"
+                  >
+                    <span class="size-[7px] rounded-full shadow-[inset_0_0_0_1.5px_var(--border)] transition-colors duration-300 group-aria-[current=true]:bg-brand group-aria-[current=true]:shadow-none" />
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <div class="min-w-0 flex-1 lg:pb-24">
+      {
+        projects.length > 0 && (
+          <>
+          <section id="projects" class="scroll-mt-20 lg:scroll-mt-24" aria-labelledby="projects-heading">
+            <h2 id="projects-heading" class="mb-3 text-sm font-medium text-muted-foreground lg:sr-only">
+              Projects
+            </h2>
+            <ProjectList projects={projects} />
+          </section>
+          <ProjectShowcase projects={projects} />
+          </>
+        )
+      }
+
+      {
+        experience.length > 0 && (
+          <section
+            id="experience"
+            class="mt-16 scroll-mt-20 sm:mt-22 lg:mt-28 lg:scroll-mt-24"
+            aria-labelledby="experience-heading"
+          >
+            <h2 id="experience-heading" class="mb-3 text-sm font-medium text-muted-foreground lg:sr-only">
+              Experience
+            </h2>
+            <ExperienceList items={experience} />
+          </section>
+        )
+      }
+
+      {
+        posts.length > 0 && (
+          <section
+            id="writing"
+            class="mt-16 scroll-mt-20 sm:mt-22 lg:mt-28 lg:scroll-mt-24"
+            aria-labelledby="writing-heading"
+          >
+            <h2 id="writing-heading" class="mb-3 text-sm font-medium text-muted-foreground lg:sr-only">
+              Writing
+            </h2>
+            <PostList posts={posts} class="lg:border-t-0" />
+            <a
+              href="/blog"
+              class="mt-4 inline-block text-[14.5px] font-medium text-link underline-offset-4 hover:underline"
+            >
+              All posts
+            </a>
+          </section>
+        )
+      }
+
+      <p class="mt-24 hidden text-[13.5px] text-muted-foreground lg:block">
+        &copy; {new Date().getFullYear()} Macklin
+      </p>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Highlight the nav entry for the section being read.
+  const links = new Map(
+    [...document.querySelectorAll<HTMLAnchorElement>("[data-section-link]")].map((a) => [
+      a.dataset.sectionLink!,
+      a,
+    ]),
+  );
+  const sections = [...links.keys()]
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null);
+
+  function update() {
+    const line = window.innerHeight * 0.35;
+    let current = sections[0];
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top <= line) current = section;
+    }
+    const atBottom =
+      window.scrollY > 0 && window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
+    if (atBottom) current = sections[sections.length - 1];
+    links.forEach((link, id) => link.setAttribute("aria-current", String(id === current?.id)));
+  }
+
+  if (sections.length > 0) {
+    update();
+    addEventListener("scroll", update, { passive: true });
+    addEventListener("resize", update);
+  }
+</script>

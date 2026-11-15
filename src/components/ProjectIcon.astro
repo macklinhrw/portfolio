@@ -1,0 +1,61 @@
+---
+import Hanzi from "@/components/Hanzi.astro";
+
+interface Props {
+  icon: "document" | "hanzi" | "feather" | "mountain";
+  class?: string;
+}
+
+const { icon, class: className } = Astro.props;
+---
+
+{
+  icon === "hanzi" ? (
+    <Hanzi class={className} />
+  ) : icon === "mountain" ? (
+    <svg
+      class={className}
+      viewBox="0 0 32 32"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 24.5 13 10l5 7.5 3-4 7 11Z" />
+      <path d="m10.6 13.9 2.4 1.6 2.3-1.8" />
+      <path d="M4 27.5h24" />
+    </svg>
+  ) : icon === "feather" ? (
+    <svg
+      class={className}
+      viewBox="0 0 32 32"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M24.5 7.5c-6 0-12.5 4.5-14 13.5l-.5 3.5 3.5-.5c9-1.5 13.5-8 13.5-14V7.5Z" />
+      <path d="M8 26 19 15" />
+      <path d="M13.5 18.5h5" />
+    </svg>
+  ) : (
+    <svg
+      class={className}
+      viewBox="0 0 32 32"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M8 6.5h11l5 5V25.5H8z" />
+      <path d="M19 6.5v5h5" />
+      <path d="M12 16h8M12 20h5" />
+    </svg>
+  )
+}

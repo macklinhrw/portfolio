@@ -1,0 +1,60 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  items: CollectionEntry<"experience">[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<ol class:list={["-mx-4 flex flex-col gap-2", className]}>
+  {
+    items.map((item) => {
+      const { role, company, url, start, end, summary, highlights, stack } = item.data;
+      return (
+        <li class="experience-row">
+          <p class="experience-dates">
+            <time>{start}</time>
+            <span aria-hidden="true"> – </span>
+            <time>{end}</time>
+          </p>
+          <div class="min-w-0">
+            <h3 class="experience-title">
+              {role}
+              <span class="experience-at" aria-hidden="true">
+                ·
+              </span>
+              {url ? (
+                <a href={url} class="experience-company">
+                  {company}
+                  <svg class="project-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M5 11 11 5M6 5h5v5" />
+                  </svg>
+                </a>
+              ) : (
+                <span>{company}</span>
+              )}
+            </h3>
+            <p class="experience-summary">{summary}</p>
+            {highlights.length > 0 && (
+              <ul class="experience-highlights">
+                {highlights.map((h) => (
+                  <li>{h}</li>
+                ))}
+              </ul>
+            )}
+            {stack.length > 0 && (
+              <p class="project-stack" aria-label="Built with">
+                {stack.map((tech) => (
+                  <span class="tech-pill">{tech}</span>
+                ))}
+              </p>
+            )}
+          </div>
+        </li>
+      );
+    })
+  }
+</ol>

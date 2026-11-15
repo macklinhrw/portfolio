@@ -1,0 +1,144 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ProjectIcon from "@/components/ProjectIcon.astro";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  class?: string;
+  /** Shown wide (project page) rather than as the small square (home page). */
+  wide?: boolean;
+}
+
+const { project, class: className, wide = false } = Astro.props;
+const { clips, icon } = project.data;
+const isStill = (src: string) => /\.(webp|png|jpe?g|avif)$/i.test(src);
+---
+
+{/* Shows a project's clips one after another: videos play through, stills hold for a few seconds. A clip whose file is missing shows the project icon instead. */}
+<span class:list={["clip-cycle", className]} data-clip-cycle aria-hidden="true">
+  {
+    clips.map((clip) => (
+      <span class="clip" data-fit={clip.fit}>
+        {isStill(clip.src) ? (
+          <img src={(!wide && clip.square) || clip.src} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <video muted playsinline preload="metadata">
+            <source src={(!wide && clip.square) || clip.src} type="video/mp4" />
+          </video>
+        )}
+        <span class="clip-placeholder">
+          <ProjectIcon icon={icon} class="clip-placeholder-icon" />
+          {clip.label}
+        </span>
+      </span>
+    ))
+  }
+  {
+    clips.length > 1 && (
+      <span class="clip-bars">
+        {clips.map(() => (
+          <i>
+            <b />
+          </i>
+        ))}
+      </span>
+    )
+  }
+</span>
+
+<script>
+  /** How long a still, or a clip whose file is missing, stays up before the next one. */
+  const STILL_MS = 4000;
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function setUp(box: HTMLElement) {
+    const clips = [...box.querySelectorAll<HTMLElement>(".clip")];
+    const bars = [...box.querySelectorAll<HTMLElement>(".clip-bars b")];
+    const videos = clips.map((clip) => clip.querySelector("video"));
+    const isMissing = (n: number) => clips[n].classList.contains("missing");
+    /** Stills and missing clips both run on a timer rather than a video's own clock. */
+    const runsOnTimer = (n: number) => !videos[n] || isMissing(n);
+
+    clips.forEach((clip, n) => {
+      const markMissing = () => clip.classList.add("missing");
+      const video = videos[n];
+      if (video) {
+        video.querySelector("source")?.addEventListener("error", markMissing);
+        video.addEventListener("error", markMissing);
+        if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) markMissing();
+      } else {
+        const img = clip.querySelector("img");
+        img?.addEventListener("error", markMissing);
+        if (img?.complete && img.naturalWidth === 0) markMissing();
+      }
+    });
+
+    let current = 0;
+    let inView = false;
+    let progress: Animation | null = null;
+    let timer: number | undefined;
+    const active = () => inView && !document.hidden && !reduceMotion;
+
+    function pause() {
+      clearTimeout(timer);
+      progress?.pause();
+      videos[current]?.pause();
+    }
+
+    function show(n: number) {
+      pause();
+      clips[current].classList.remove("on");
+      current = n % clips.length;
+      bars.forEach((bar, j) => {
+        bar.getAnimations().forEach((a) => a.cancel());
+        bar.parentElement!.classList.toggle("done", j < current);
+      });
+      progress = null;
+      const video = videos[current];
+      if (video && !isMissing(current)) video.currentTime = 0;
+      clips[current].classList.add("on");
+      if (reduceMotion) bars[current]?.parentElement!.classList.add("done");
+      play();
+    }
+
+    function play() {
+      if (!active()) return;
+      const video = videos[current];
+      const timed = runsOnTimer(current);
+      if (!timed && video && !Number.isFinite(video.duration)) {
+        video.addEventListener("loadedmetadata", play, { once: true });
+        return;
+      }
+      const total = timed || !video ? STILL_MS : video.duration * 1000;
+      progress ??=
+        bars[current]?.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], {
+          duration: total,
+          fill: "forwards",
+        }) ?? null;
+      if (timed || !video) {
+        progress?.play();
+        const elapsed = Number(progress?.currentTime ?? 0);
+        if (clips.length > 1) timer = window.setTimeout(() => show(current + 1), total - elapsed);
+      } else {
+        if (progress) progress.currentTime = video.currentTime * 1000;
+        progress?.play();
+        video.loop = clips.length === 1;
+        video.play().catch(() => {});
+      }
+    }
+
+    videos.forEach((video) => video?.addEventListener("ended", () => show(current + 1)));
+    new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        if (inView) play();
+        else pause();
+      },
+      { threshold: 0.4 },
+    ).observe(box);
+    document.addEventListener("visibilitychange", () => (document.hidden ? pause() : play()));
+    show(0);
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-clip-cycle]").forEach(setUp);
+</script>

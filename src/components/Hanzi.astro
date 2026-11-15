@@ -1,0 +1,18 @@
+---
+// 学 (xué, "to study") drawn from Remlang's stroke data. Each instance gets its own
+// id prefix, because the clip paths reference ids and a page can hold several copies.
+import raw from "@/assets/xue.svg?raw";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+const prefix = `hz${crypto.randomUUID().slice(0, 8)}`;
+const svg = raw
+  .replace(/<!--[\s\S]*?-->\s*/, "")
+  .replaceAll("z23398", prefix)
+  .replace("HANZI_CLASS", `hanzi ${className}`.trim());
+---
+
+<Fragment set:html={svg} />

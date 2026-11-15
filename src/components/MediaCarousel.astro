@@ -1,0 +1,309 @@
+---
+export interface Slide {
+  src: string;
+  /** "cover" fills the frame; "contain" keeps a phone-shaped recording whole. */
+  fit: "cover" | "contain";
+  /** Shown under the frame while this slide is up. */
+  caption: string;
+  /** Where the frame and caption link to, if anywhere. */
+  href?: string;
+  /** A sentence or two about the slide, shown with `chapters`. */
+  description?: string;
+  /** The slide's project colour (OKLCH hue) for its frame; otherwise it inherits the page's. */
+  hue?: number;
+}
+
+interface Props {
+  slides: Slide[];
+  label: string;
+  /**
+   * Lists the slides as chapters (title and description) beside the carousel, as another way to
+   * move between them; on narrow screens the list gives way to the caption and description.
+   */
+  chapters?: boolean;
+  class?: string;
+}
+
+const { slides, label, chapters = false, class: className } = Astro.props;
+/** Every slide is a phone recording. */
+const phone = slides.length > 0 && slides.every((s) => s.fit === "contain");
+const isVideo = (src: string) => /\.(mp4|webm)$/i.test(src);
+const first = slides[0];
+const linked = slides.some((s) => s.href);
+const arrow = "M5 11 11 5M6 5h5v5";
+---
+
+{/*
+  One slide at a time. A clip plays through and then the carousel moves on; a still holds
+  for a few seconds. Swipe, the arrows, the segments or the arrow keys move between slides.
+  Pressing and holding the current slide keeps it up (its clip keeps looping). With `chapters`, a list of the
+  slides beside it does the same (the home page uses it bare; project pages with chapters).
+*/}
+{
+  first && (
+    <section
+      class:list={["showcase", chapters && "showcase--chapters", chapters && phone && "showcase--phone", className]}
+      aria-roledescription="carousel"
+      aria-label={label}
+      data-showcase
+    >
+      <div class="showcase-main">
+      <div class="showcase-viewport" tabindex="0" aria-label={`${label}, use the arrow keys to move between them`}>
+        <div class="showcase-container">
+          {slides.map((slide, i) => {
+            const media = isVideo(slide.src) ? (
+              <video src={slide.src} muted playsinline preload="metadata" aria-hidden="true" />
+            ) : (
+              <img src={slide.src} alt="" loading="lazy" decoding="async" draggable="false" />
+            );
+            return (
+              <div
+                class="showcase-slide project-tint"
+                style={slide.hue !== undefined ? `--hue: ${slide.hue}` : undefined}
+                data-fit={slide.fit}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} of ${slides.length}: ${slide.caption}`}
+                data-caption={slide.caption}
+                data-description={slide.description}
+                data-href={slide.href}
+              >
+                {slide.href ? (
+                  <a href={slide.href} class="showcase-frame" tabindex="-1" draggable="false">
+                    {media}
+                  </a>
+                ) : (
+                  <div class="showcase-frame">{media}</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div class="showcase-controls">
+        {linked ? (
+          <a class="showcase-caption" href={first.href} data-showcase-caption aria-live="polite">
+            <span data-showcase-name>{first.caption}</span>
+            <svg class="project-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d={arrow} />
+            </svg>
+          </a>
+        ) : (
+          <span class="showcase-caption showcase-caption--plain" aria-live="polite">
+            <span data-showcase-name>{first.caption}</span>
+          </span>
+        )}
+        {slides.length > 1 && (
+          <>
+            <div class="showcase-bars">
+              {slides.map((slide, i) => (
+                <button type="button" class="showcase-bar" data-showcase-bar={i} aria-label={`Show ${slide.caption}`}>
+                  <i>
+                    <b />
+                  </i>
+                </button>
+              ))}
+            </div>
+            <div class="showcase-arrows">
+              <button type="button" class="showcase-arrow" data-showcase-prev aria-label="Previous">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M10 3.5 5.5 8l4.5 4.5" />
+                </svg>
+              </button>
+              <button type="button" class="showcase-arrow" data-showcase-next aria-label="Next">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M6 3.5 10.5 8 6 12.5" />
+                </svg>
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+      {chapters && first.description && (
+        <p class="showcase-description" data-showcase-description>
+          {first.description}
+        </p>
+      )}
+      </div>
+
+      {chapters && (
+        <ol class="showcase-chapters">
+          {slides.map((slide, i) => (
+            <li>
+              <button
+                type="button"
+                class:list={["showcase-chapter", i === 0 && "on"]}
+                aria-pressed={i === 0 ? "true" : "false"}
+                data-showcase-chapter={i}
+              >
+                <span class="showcase-chapter-title">
+                  {slides.length > 1 && <span class="showcase-chapter-num">{String(i + 1).padStart(2, "0")}</span>}
+                  {slide.caption}
+                </span>
+                {slide.description && (
+                  <span class="showcase-chapter-text">
+                    <span>{slide.description}</span>
+                  </span>
+                )}
+                {slides.length > 1 && (
+                  <span class="showcase-chapter-progress" aria-hidden="true">
+                    <b />
+                  </span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
+  )
+}
+
+<script>
+  import EmblaCarousel from "embla-carousel";
+
+  /** How long a still image stays up before the next slide. */
+  const STILL_MS = 5000;
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function setUp(root: HTMLElement) {
+    const viewport = root.querySelector<HTMLElement>(".showcase-viewport")!;
+    const slides = [...root.querySelectorAll<HTMLElement>(".showcase-slide")];
+    const videos = slides.map((s) => s.querySelector("video"));
+    const bars = [...root.querySelectorAll<HTMLElement>("[data-showcase-bar]")];
+    const chapterButtons = [...root.querySelectorAll<HTMLElement>("[data-showcase-chapter]")];
+    /** Each slide's progress fills: its segment, and its chapter's bar when there are chapters. */
+    const fills = slides.map((_, i) =>
+      [bars[i], chapterButtons[i]].map((el) => el?.querySelector<HTMLElement>("b")).filter((b): b is HTMLElement => !!b),
+    );
+    const descriptionEl = root.querySelector<HTMLElement>("[data-showcase-description]");
+    const caption = root.querySelector<HTMLAnchorElement>("[data-showcase-caption]");
+    const nameEl = root.querySelector<HTMLElement>("[data-showcase-name]")!;
+    const single = slides.length < 2;
+
+    const embla = EmblaCarousel(viewport, { loop: !single, duration: 24, watchDrag: !single });
+
+    let current = 0;
+    let inView = false;
+    /** True while a slide is pressed: the clip keeps looping, but nothing advances. */
+    let held = false;
+    /** The current slide's fill animations (the segment, and the chapter's bar). */
+    let progress: Animation[] | null = null;
+    let timer: number | undefined;
+    const visible = () => inView && !document.hidden && !reduceMotion;
+
+    function stop() {
+      clearTimeout(timer);
+      progress?.forEach((a) => a.pause());
+      videos[current]?.pause();
+    }
+
+    // Start (or resume) the current slide: a clip plays to its end, a still holds for a while.
+    // While held, a clip loops and its progress waits; a still just waits.
+    // With a single slide there is nothing to advance to, so its clip simply loops.
+    function run() {
+      if (!visible()) return;
+      const video = videos[current];
+      if (single) {
+        if (video) {
+          video.loop = true;
+          video.play().catch(() => {});
+        }
+        return;
+      }
+      if (video && !Number.isFinite(video.duration)) {
+        video.addEventListener("loadedmetadata", run, { once: true });
+        return;
+      }
+      const total = video ? video.duration * 1000 : STILL_MS;
+      progress ??= fills[current].map((fill) =>
+        fill.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: total, fill: "forwards" }),
+      );
+      clearTimeout(timer);
+      if (video) video.loop = held;
+      if (held) {
+        progress.forEach((a) => a.pause());
+        video?.play().catch(() => {});
+        return;
+      }
+      if (video) {
+        progress.forEach((a) => {
+          a.currentTime = video.currentTime * 1000;
+          a.play();
+        });
+        video.play().catch(() => {});
+      } else {
+        progress.forEach((a) => a.play());
+        const elapsed = Number(progress[0]?.currentTime ?? 0);
+        timer = window.setTimeout(() => embla.scrollNext(), total - elapsed);
+      }
+    }
+
+    function select() {
+      stop();
+      current = embla.selectedScrollSnap();
+      fills.forEach((slideFills, j) => {
+        slideFills.forEach((fill) => fill.getAnimations().forEach((a) => a.cancel()));
+        bars[j]?.classList.toggle("done", j < current);
+        bars[j]?.setAttribute("aria-current", String(j === current));
+        chapterButtons[j]?.classList.toggle("on", j === current);
+        chapterButtons[j]?.setAttribute("aria-pressed", String(j === current));
+      });
+      progress = null;
+      videos.forEach((v) => {
+        if (v) v.currentTime = 0;
+      });
+      const slide = slides[current];
+      nameEl.textContent = slide.dataset.caption ?? "";
+      if (descriptionEl) descriptionEl.textContent = slide.dataset.description ?? "";
+      if (caption) caption.href = slide.dataset.href ?? "#";
+      if (reduceMotion) bars[current]?.classList.add("done");
+      run();
+    }
+
+    if (!single) videos.forEach((video) => video?.addEventListener("ended", () => embla.scrollNext()));
+    embla.on("select", select);
+
+    // Pressing on a slide (mouse button or finger) holds the carousel on it while the press lasts:
+    // the clip keeps looping, the slide doesn't advance. Letting go, anywhere, lets the clip play
+    // on to its end, then the carousel moves on.
+    viewport.addEventListener("pointerdown", () => {
+      held = true;
+      run();
+    });
+    const release = () => {
+      if (!held) return;
+      held = false;
+      run();
+    };
+    window.addEventListener("pointerup", release);
+    window.addEventListener("pointercancel", release);
+
+    root.querySelector("[data-showcase-prev]")?.addEventListener("click", () => embla.scrollPrev());
+    root.querySelector("[data-showcase-next]")?.addEventListener("click", () => embla.scrollNext());
+    bars.forEach((bar, i) => bar.addEventListener("click", () => embla.scrollTo(i)));
+    if (!single) chapterButtons.forEach((button, i) => button.addEventListener("click", () => embla.scrollTo(i)));
+    viewport.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") embla.scrollNext();
+      else if (event.key === "ArrowLeft") embla.scrollPrev();
+      else return;
+      event.preventDefault();
+    });
+
+    // Only play while the carousel is on screen and the tab is visible.
+    new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        if (inView) run();
+        else stop();
+      },
+      { threshold: 0.4 },
+    ).observe(viewport);
+    document.addEventListener("visibilitychange", () => (document.hidden ? stop() : run()));
+
+    select();
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-showcase]").forEach(setUp);
+</script>

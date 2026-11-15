@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Local working material: raw screen captures, design-tool state and mockups
+captures/
+.impeccable/
+public/mockups/
+PRODUCT.md

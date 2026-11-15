@@ -1,0 +1,37 @@
+---
+// Slim top bar for reading pages (posts and project pages): a back link, and the page's title,
+// which fades in with a hairline once the page's own heading (marked `data-reader-title`)
+// has scrolled under the bar. Anything in the default slot sits on the right.
+
+interface Props {
+  title: string;
+  backHref?: string;
+  backLabel?: string;
+}
+
+const { title, backHref = "/", backLabel = "Home" } = Astro.props;
+const hasActions = Astro.slots.has("default");
+---
+
+<div class="reader-bar" data-reader-bar>
+  <a href={backHref} class="reader-back">
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    {backLabel}
+  </a>
+  <p class="reader-bar-title" aria-hidden="true">{title}</p>
+  <div class="reader-bar-actions">
+    {hasActions && <slot />}
+  </div>
+</div>
+
+<script>
+  // The bar condenses (title + hairline) once the page's own heading has passed under it. An
+  // observer flips this once per crossing, so it can't flicker around a scroll threshold.
+  const bar = document.querySelector<HTMLElement>("[data-reader-bar]");
+  const heading = document.querySelector<HTMLElement>("[data-reader-title]");
+  if (bar && heading) {
+    new IntersectionObserver(([entry]) => bar.classList.toggle("condensed", !entry.isIntersecting), {
+      rootMargin: `-${bar.offsetHeight}px 0px 0px 0px`,
+    }).observe(heading);
+  }
+</script>

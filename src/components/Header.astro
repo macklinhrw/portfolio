@@ -1,0 +1,44 @@
+---
+import ThemeToggle from "@/components/ThemeToggle.astro";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
+  { href: "https://github.com/macklinhrw", label: "GitHub" },
+];
+
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) =>
+  href === "/" ? pathname === "/" || pathname.startsWith("/projects") : pathname.startsWith(href);
+---
+
+<header class:list={["sticky top-0 z-10 bg-background/88 backdrop-blur-md", className]}>
+  <div
+    class="mx-auto flex h-15 w-full max-w-[728px] items-center justify-between px-6 text-[14.5px]"
+  >
+    <a href="/" class="text-[15px] font-semibold tracking-[-0.015em]">Macklin</a>
+    <nav class="-mr-2 flex items-center gap-1" aria-label="Main">
+      {
+        links.map(({ href, label }) => (
+          <a
+            href={href}
+            aria-current={isActive(href) ? "page" : undefined}
+            class:list={[
+              "rounded-lg px-2.5 py-1.5 transition-colors hover:bg-hover hover:text-foreground",
+              isActive(href) ? "text-foreground" : "text-muted-foreground",
+            ]}
+          >
+            {label}
+          </a>
+        ))
+      }
+      <ThemeToggle class="ml-1" />
+    </nav>
+  </div>
+</header>

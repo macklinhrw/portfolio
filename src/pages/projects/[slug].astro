@@ -1,0 +1,158 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import MediaCarousel from "@/components/MediaCarousel.astro";
+import ProjectFacts from "@/components/ProjectFacts.astro";
+import { projectSlides } from "@/lib/project-media";
+import ReaderBar from "@/components/ReaderBar.astro";
+import ProjectIcon from "@/components/ProjectIcon.astro";
+import ThemeToggle from "@/components/ThemeToggle.astro";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects", ({ data }) => !data.draft);
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { name, description, tagline, platforms, stack, icon, iconImage, url, editions, period, hue } = project.data;
+const { Content } = await render(project);
+const hasBody = Boolean(project.body?.trim());
+
+/** A tab's id in the URL hash, e.g. "Mobile · Japanese" → "mobile". */
+const tabId = (label: string) => label.split(" · ")[0].toLowerCase().replace(/[^a-z0-9]+/g, "-");
+const paragraphs = (text?: string) => (text ?? "").split(/\n\s*\n/).filter((p) => p.trim());
+---
+
+<Layout title={`${name} · Macklin`} description={description} variant="reader">
+  <ReaderBar title={name}>
+    <ThemeToggle />
+  </ReaderBar>
+  <main
+    class="project-tint project-page mx-auto w-full max-w-[1180px] px-6 pt-10 pb-28 sm:pt-12"
+    style={hue !== undefined ? `--hue: ${hue}` : undefined}
+  >
+    <header class="project-head">
+      <div class="flex min-w-0 items-center gap-4">
+        {
+          iconImage ? (
+            <span class="project-tile project-tile--image !size-14 shrink-0">
+              <img src={iconImage} alt="" />
+            </span>
+          ) : (
+            <span class="project-tile !size-14 shrink-0">
+              <ProjectIcon icon={icon} class="size-[34px]" />
+            </span>
+          )
+        }
+        <div class="min-w-0">
+          <h1 data-reader-title class="text-[30px] leading-[1.15] font-semibold tracking-[-0.03em] sm:text-[38px]">
+            {name}
+          </h1>
+          <p class="mt-1 text-[16.5px] leading-[1.5] text-subtle-foreground">{tagline ?? description}</p>
+        </div>
+      </div>
+      {!editions && <p class="project-period">{[platforms, period].filter(Boolean).join(" · ")}</p>}
+    </header>
+
+    {
+      editions ? (
+        <div class="project-tabs-wrap" data-project-tabs>
+          {/* One tab per edition; the first is open by default, and the URL hash remembers the choice */}
+          <div class="project-tabs" role="tablist" aria-label={`${name} apps`}>
+            {editions.map((edition, i) => {
+              const [main, sub] = edition.label.split(" · ");
+              return (
+                <button
+                  type="button"
+                  role="tab"
+                  id={`tab-${tabId(edition.label)}`}
+                  class="project-tab"
+                  aria-selected={i === 0 ? "true" : "false"}
+                  aria-controls={`panel-${tabId(edition.label)}`}
+                  tabindex={i === 0 ? 0 : -1}
+                  data-tab={tabId(edition.label)}
+                >
+                  <span class="project-tab-name">{main}</span>
+                  {sub && <span class="project-tab-sub">{sub}</span>}
+                </button>
+              );
+            })}
+          </div>
+
+          {editions.map((edition, i) => (
+            <section
+              role="tabpanel"
+              id={`panel-${tabId(edition.label)}`}
+              aria-labelledby={`tab-${tabId(edition.label)}`}
+              class="project-panel"
+              hidden={i !== 0}
+              data-panel={tabId(edition.label)}
+            >
+              <p class="max-w-[68ch] text-[16.5px] leading-[1.6] text-subtle-foreground">{edition.description}</p>
+              <MediaCarousel slides={projectSlides(project, edition.label)} label={`${name} ${edition.label}`} chapters class="mt-6" />
+              <div class="project-below">
+                <div>
+                  <h2 class="text-[20px] font-semibold tracking-[-0.02em]">About</h2>
+                  <div class="prose prose-neutral mt-3 max-w-[64ch] dark:prose-invert">
+                    {paragraphs(edition.about ?? edition.description).map((p) => <p>{p}</p>)}
+                  </div>
+                </div>
+                <ProjectFacts period={edition.period} platforms={edition.platforms ?? platforms} stack={edition.stack} url={url} />
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <>
+          <MediaCarousel slides={projectSlides(project)} label={name} chapters class="mt-8" />
+          <section class="project-below">
+            <div>
+              {hasBody && (
+                <>
+                  <h2 class="text-[20px] font-semibold tracking-[-0.02em]">About</h2>
+                  <div class="prose prose-neutral mt-3 max-w-[64ch] dark:prose-invert">
+                    <Content />
+                  </div>
+                </>
+              )}
+            </div>
+            <ProjectFacts period={period} platforms={platforms} stack={stack} url={url} />
+          </section>
+        </>
+      )
+    }
+  </main>
+</Layout>
+
+<script>
+  // Tabs: click or arrow keys switch; the hash (#web) opens a tab directly and is kept in sync.
+  const root = document.querySelector<HTMLElement>("[data-project-tabs]");
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-tab]")];
+    const panels = [...root.querySelectorAll<HTMLElement>("[data-panel]")];
+
+    function select(id: string, focus = false) {
+      const index = Math.max(0, tabs.findIndex((t) => t.dataset.tab === id));
+      tabs.forEach((t, i) => {
+        t.setAttribute("aria-selected", String(i === index));
+        t.tabIndex = i === index ? 0 : -1;
+      });
+      panels.forEach((p, i) => (p.hidden = i !== index));
+      if (focus) tabs[index].focus();
+      const hash = index === 0 ? "" : `#${tabs[index].dataset.tab}`;
+      if (location.hash !== hash) history.replaceState(null, "", hash || location.pathname + location.search);
+    }
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => select(tab.dataset.tab!));
+      tab.addEventListener("keydown", (event) => {
+        const step = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+        if (!step) return;
+        event.preventDefault();
+        select(tabs[(i + step + tabs.length) % tabs.length].dataset.tab!, true);
+      });
+    });
+
+    if (location.hash) select(location.hash.slice(1));
+  }
+</script>

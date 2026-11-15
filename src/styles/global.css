@@ -1,0 +1,2046 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Geist Variable', sans-serif;
+    --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+    --color-link: var(--link);
+    --color-brand: var(--brand);
+    --color-hover: var(--hover);
+    --color-brand-foreground: var(--brand-foreground);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-subtle-foreground: var(--subtle-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Light theme ("paper"): dark ink on warm paper, which keeps its contrast in bright light.
+   Vermilion marks what you can act on. */
+:root {
+    --background: oklch(0.977 0.009 85);
+    --foreground: oklch(0.17 0.012 260);
+    --card: oklch(0.992 0.005 85);
+    --card-foreground: var(--foreground);
+    --popover: oklch(0.992 0.005 85);
+    --popover-foreground: var(--foreground);
+    --primary: oklch(0.17 0.012 260);
+    --primary-foreground: oklch(0.977 0.009 85);
+    --secondary: oklch(0.945 0.012 80);
+    --secondary-foreground: var(--foreground);
+    --muted: oklch(0.945 0.012 80);
+    --muted-foreground: oklch(0.45 0.012 260);
+    /* Supporting text under titles (intro, descriptions, summaries): darker than labels */
+    --subtle-foreground: oklch(0.31 0.012 260);
+    --accent: oklch(0.945 0.012 80);
+    --accent-foreground: var(--foreground);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.88 0.012 80);
+    --input: oklch(0.88 0.012 80);
+    --ring: oklch(0.55 0.2 32);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --radius: 0.625rem;
+    /* The site's one accent: links, the current section, arrows on hover */
+    --brand: oklch(0.55 0.2 32);
+    /* Text sitting on a faint brand wash (the current section in the nav) */
+    --brand-foreground: oklch(0.42 0.16 32);
+    --link: oklch(0.52 0.19 32);
+    --selection: oklch(0.7 0.15 32 / 0.28);
+    /* "Macklin" in the hero greeting, over the photo */
+    --hero-name: oklch(0.82 0.11 45);
+    /* The same in both themes: Geist is variable, so any weight change would rewrap text on switch */
+    --body-weight: 420;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+}
+
+/* Dark theme, the default ("Fuji dusk"): the hero photo's blue hour carried down the page,
+   warm white text, and a sunrise coral for actions. */
+.dark {
+    --background: oklch(0.2 0.045 268);
+    --foreground: oklch(0.98 0.012 80);
+    /* Surfaces are lifted from the background, so they follow any background shade */
+    --card: color-mix(in oklab, var(--background), white 3.5%);
+    --card-foreground: var(--foreground);
+    --popover: oklch(0.24 0.05 268);
+    --popover-foreground: var(--foreground);
+    --primary: oklch(0.98 0.012 80);
+    --primary-foreground: oklch(0.2 0.045 268);
+    --secondary: oklch(0.27 0.05 268);
+    --secondary-foreground: var(--foreground);
+    --muted: color-mix(in oklab, var(--background), white 6%);
+    --muted-foreground: oklch(0.78 0.045 264);
+    /* Supporting text under titles (intro, descriptions, summaries): brighter than labels */
+    --subtle-foreground: oklch(0.9 0.025 262);
+    --accent: color-mix(in oklab, var(--background), white 6%);
+    --accent-foreground: var(--foreground);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(0.31 0.05 268);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.79 0.15 48);
+    --brand: oklch(0.79 0.15 48);
+    --brand-foreground: oklch(0.93 0.06 60);
+    --link: oklch(0.82 0.14 52);
+    --selection: oklch(0.79 0.15 48 / 0.35);
+    --hero-name: oklch(0.85 0.12 58);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* Hover, one language across the site:
+   - small controls (icon buttons, nav links, arrows) take --hover, a step of the text colour
+     mixed into the page, so it reads the same on every page colour, the reader's included;
+   - cards (projects, experience) lift: on paper a whiter card with a soft shadow, in the dark a
+     glow of the card's own colour. */
+:root {
+    --hover: color-mix(in oklab, var(--foreground) 7.5%, var(--background));
+    --lift: oklch(0.995 0.004 85);
+    --lift-shadow: 0 1px 2px oklch(0.35 0.03 60 / 0.07), 0 10px 28px -10px oklch(0.35 0.04 60 / 0.22);
+}
+
+/* The site theme's own page colours, for the "Site" swatch in the post reader's settings.
+   Keyed to the site theme rather than .dark, which the reader's own pages also switch. */
+:root {
+    --site-bg: oklch(0.2 0.045 268);
+    --site-fg: oklch(0.98 0.012 80);
+    --site-line: oklch(0.4 0.05 268);
+}
+html[data-site-theme="light"] {
+    --site-bg: oklch(0.977 0.009 85);
+    --site-fg: oklch(0.17 0.012 260);
+    --site-line: oklch(0.8 0.012 80);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    font-weight: var(--body-weight);
+    }
+  html {
+    @apply font-sans;
+    }
+}
+::selection {
+  background: var(--selection);
+  color: var(--foreground);
+}
+
+/* Article body: tuned on top of the typography plugin's defaults */
+.prose {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-links: var(--link);
+  --tw-prose-invert-body: var(--foreground);
+  --tw-prose-invert-links: var(--link);
+  font-size: 1.09375rem;
+  line-height: 1.7;
+}
+
+.prose a {
+  font-weight: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.prose pre {
+  padding: 1.25rem 1.375rem;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  background-color: var(--muted) !important;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.prose :not(pre) > code {
+  padding: 0.125rem 0.3125rem;
+  border-radius: 0.3125rem;
+  background-color: var(--muted);
+  font-size: 0.875em;
+  font-weight: 500;
+}
+
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
+/* Shiki emits both themes as CSS variables; pick one per colour scheme */
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light);
+}
+
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark);
+}
+
+/* Theme toggle (ThemeToggle.astro): an icon button that shows a sun while dark, a moon while light */
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.theme-toggle:hover {
+  background: var(--hover);
+  color: var(--foreground);
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.theme-icon-moon,
+.dark .theme-icon-sun {
+  display: block;
+}
+
+.theme-icon-sun,
+.dark .theme-icon-moon {
+  display: none;
+}
+
+/* Theme switch (lib/theme.ts). The page swaps in one frame; only the paint animates. */
+
+/* The swap itself never animates element by element */
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
+/* Reveal: the new theme grows as a circle over a still snapshot of the old one (the circle is
+   animated from script). Both snapshots stay fully opaque, with no default crossfade. */
+html[data-theme-transition="reveal"]::view-transition-old(root),
+html[data-theme-transition="reveal"]::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html[data-theme-transition="reveal"]::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* Reduced motion: a short crossfade, nothing moves */
+html[data-theme-transition="fade"]::view-transition-group(root) {
+  animation-duration: 0.2s;
+}
+
+/* Browsers without view transitions: colours fade in place */
+.theme-fading,
+.theme-fading *,
+.theme-fading *::before,
+.theme-fading *::after {
+  transition:
+    color 0.4s ease,
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    fill 0.4s ease,
+    stroke 0.4s ease,
+    box-shadow 0.4s ease,
+    text-decoration-color 0.4s ease !important;
+}
+
+/* Registered so the icon colours can fade between neutral and the hover purple */
+@property --tint-ink {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --tint-deep {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+/* Project surfaces: each project takes its own colour from --hue (an OKLCH hue angle, set
+   inline from the project's `hue`), on its icon tile, tech pills, hover wash and media frames. */
+.project-tint {
+  --tint-wash: oklch(0.6 0.12 var(--hue, 268) / 0.07);
+  --tint-edge: oklch(0.6 0.12 var(--hue, 268) / 0.22);
+  --tint-tile: oklch(0.95 0.04 var(--hue, 268));
+  --tint-deep: oklch(0.86 0.06 var(--hue, 268));
+  --tint-ink: oklch(0.48 0.14 var(--hue, 268));
+  --tint-pill-bg: oklch(0.93 0.04 var(--hue, 268));
+  --tint-pill-fg: oklch(0.37 0.1 var(--hue, 268));
+}
+
+.dark .project-tint {
+  --tint-wash: oklch(0.8 0.13 var(--hue, 268) / 0.08);
+  --tint-edge: oklch(0.8 0.13 var(--hue, 268) / 0.28);
+  --tint-tile: oklch(0.8 0.13 var(--hue, 268) / 0.14);
+  --tint-deep: oklch(0.42 0.09 var(--hue, 268));
+  --tint-ink: oklch(0.84 0.13 var(--hue, 268));
+  --tint-pill-bg: oklch(0.8 0.13 var(--hue, 268) / 0.13);
+  --tint-pill-fg: oklch(0.9 0.07 var(--hue, 268));
+}
+
+.project-tint .tech-pill {
+  background: var(--tint-pill-bg);
+  color: var(--tint-pill-fg);
+}
+
+/* Project card: icon tile beside the name, then description and tech pills across the full width */
+.project-row {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  column-gap: 16px;
+  align-items: start;
+  padding: 18px 16px;
+  border-radius: 16px;
+  transition:
+    --tint-ink 0.3s ease,
+    --tint-deep 0.3s ease;
+}
+
+/* Frost layer: always blurred, only its opacity changes. Clear at rest so the star field
+   shows through; on hover a small blur softens the stars into glows and a thin fill lifts the
+   card. Fading opacity (rather than animating the blur itself) avoids the browser tearing the
+   layer down and rebuilding it, which made the background flicker. */
+.project-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--tint-wash);
+  -webkit-backdrop-filter: blur(2.5px) brightness(1.15);
+  backdrop-filter: blur(2.5px) brightness(1.15);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.project-row:hover::before,
+.project-row:focus-visible::before {
+  opacity: 1;
+}
+
+/* Light: cards lift off the paper (see --lift). The card keeps a breath of its project's hue. */
+:root:not(.dark) :is(.project-row, .experience-row)::before {
+  background-color: color-mix(in oklab, var(--lift), oklch(0.95 0.04 var(--hue, 85)) 18%);
+  box-shadow: var(--lift-shadow);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* On hover the icon's colour deepens a step (light) or brightens a step (dark) */
+.project-row:hover,
+.project-row:focus-visible {
+  --tint-ink: oklch(0.42 0.16 var(--hue, 268));
+}
+
+.dark .project-row:hover,
+.dark .project-row:focus-visible {
+  --tint-ink: oklch(0.9 0.14 var(--hue, 268));
+}
+
+/* Frosted surface for anything that can sit over the hero photo: a translucent page
+   background with the photo blurred behind it. In the components layer so utilities
+   (like the current nav button's fill) still win. */
+@layer components {
+  .frosted {
+    background-color: color-mix(in srgb, var(--background) 55%, transparent);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+}
+
+.project-tile {
+  grid-row: 1;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--tint-tile);
+  box-shadow: inset 0 0 0 1px var(--tint-edge);
+  color: var(--tint-ink);
+  transition: background-color 0.2s;
+}
+
+/* A project's own app icon fills the same tile as the drawn icons, under the same outline,
+   in its own colours */
+.project-tile--image {
+  position: relative;
+  overflow: hidden;
+}
+
+.project-tile--image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-tile--image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--tint-edge);
+  pointer-events: none;
+}
+
+
+
+.project-name {
+  grid-column: 2;
+  align-self: center;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Arrow after the project name: says the row opens the project, and nudges up and right on hover */
+.project-arrow {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-left: 3px;
+  vertical-align: -1px;
+  color: var(--muted-foreground);
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.2s;
+}
+
+.project-row:hover .project-arrow,
+.project-row:focus-visible .project-arrow {
+  color: var(--tint-ink);
+  transform: translate(2px, -2px);
+}
+
+
+.project-description {
+  grid-column: 1 / -1;
+  margin-top: 12px;
+  max-width: 58ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--subtle-foreground);
+}
+
+.project-stack {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* A project with several editions: side-by-side sections under the name, split by a hairline */
+.project-editions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 12px;
+}
+
+.project-edition {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.project-edition + .project-edition {
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 1px solid var(--border);
+}
+
+.project-edition-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.project-edition-description {
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--subtle-foreground);
+}
+
+.project-edition .project-stack {
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+@media (max-width: 640px) {
+  .project-editions {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .project-edition + .project-edition {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+}
+
+/* Technology names: small neutral pills, the same everywhere, quieter than the text around them */
+.tech-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--foreground) 7%, transparent);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--muted-foreground);
+}
+
+
+
+
+/* Clip square: the project's clips play in turn, with a thin progress bar for each */
+.clip-cycle {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--tint-wash);
+  box-shadow: inset 0 0 0 1px var(--tint-edge);
+}
+
+.clip {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.clip.on {
+  opacity: 1;
+}
+
+.clip :is(video, img) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.clip[data-fit="phone"] :is(video, img) {
+  object-position: center top;
+}
+
+.clip-placeholder {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-content: center;
+  justify-items: center;
+  gap: 6px;
+  padding: 10px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.clip-placeholder-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--tint-ink);
+}
+
+.clip.missing .clip-placeholder {
+  display: grid;
+}
+
+.clip.missing :is(video, img) {
+  display: none;
+}
+
+.clip-bars {
+  position: absolute;
+  inset: auto 8px 8px;
+  z-index: 1;
+  display: flex;
+  gap: 4px;
+}
+
+.clip-bars i {
+  flex: 1;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--foreground) 14%, transparent);
+}
+
+.clip-bars b {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
+.clip-bars .done b {
+  transform: scaleX(1);
+}
+
+/* 学 drawn from stroke data, in the shared project shade */
+.hanzi .guide {
+  fill: var(--tint-deep);
+}
+
+.hanzi .ink path {
+  fill: none;
+  stroke: var(--tint-ink);
+  stroke-width: 128;
+  stroke-linecap: round;
+}
+
+/* Home hero: a faint, desaturated photo felt behind the intro rather than seen */
+.hero-wash {
+  position: absolute;
+  /* The photo scales up a little with the parallax; keep it inside the window's width */
+  overflow-x: clip;
+  z-index: -1;
+  top: -2rem;
+  bottom: -6rem;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%),
+    linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%),
+    linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+  mask-composite: intersect;
+}
+
+/* Same box as the wash, but no fade: the silhouette stays fully solid through the hero. */
+.hero-occluder {
+  position: absolute;
+  /* Same for the silhouette, which scales with the photo */
+  overflow-x: clip;
+  z-index: -1;
+  top: -2rem;
+  bottom: -6rem;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Below the hero, the page colour thins out gradually so the stars fade back in rather than
+   starting at a hard line */
+.hero-occluder::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 18rem;
+  background: linear-gradient(var(--background), transparent);
+}
+
+.hero-wash img,
+.hero-occluder .hero-silhouette {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+/* The mountain silhouette is the page background colour cut to the mountain's shape, cropped
+   exactly like the photo, so it always matches whatever the background shade is */
+.hero-occluder .hero-silhouette {
+  background: var(--background);
+  -webkit-mask: url("/media/hero-fuji-silhouette.svg") 50% 30% / cover no-repeat;
+  mask: url("/media/hero-fuji-silhouette.svg") 50% 30% / cover no-repeat;
+}
+
+/* Dark: the photo at its blue hour, in colour, with a low sunrise glow over the mountain */
+.hero-wash .hero-photo {
+  opacity: 0.62;
+  filter: saturate(1.5) brightness(1.15) hue-rotate(-8deg);
+}
+
+.dark .hero-wash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 45% at 52% 48%, oklch(0.72 0.15 45 / 0.28), transparent 70%);
+}
+
+/* Light: the photo in full colour behind the greeting, solid under the text and then melting
+   into the paper below it, like mist off the lake. The fade starts under the greeting (so the
+   light text always sits on photo) and finishes just below the hero; the wash is absolutely
+   positioned, so reaching past the hero moves nothing. The stops follow an ease-in-out curve
+   so the fade has no visible start line. No parallax: the photo would slide over the content. */
+:root:not(.dark) .hero-wash {
+  top: 0;
+  bottom: -3rem;
+  overflow: hidden;
+  background: #141a1d;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - 8.5rem),
+    rgb(0 0 0 / 0.94) calc(100% - 7.4rem),
+    rgb(0 0 0 / 0.8) calc(100% - 6.2rem),
+    rgb(0 0 0 / 0.6) calc(100% - 5rem),
+    rgb(0 0 0 / 0.38) calc(100% - 3.8rem),
+    rgb(0 0 0 / 0.19) calc(100% - 2.6rem),
+    rgb(0 0 0 / 0.06) calc(100% - 1.4rem),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - 8.5rem),
+    rgb(0 0 0 / 0.94) calc(100% - 7.4rem),
+    rgb(0 0 0 / 0.8) calc(100% - 6.2rem),
+    rgb(0 0 0 / 0.6) calc(100% - 5rem),
+    rgb(0 0 0 / 0.38) calc(100% - 3.8rem),
+    rgb(0 0 0 / 0.19) calc(100% - 2.6rem),
+    rgb(0 0 0 / 0.06) calc(100% - 1.4rem),
+    transparent 100%
+  );
+}
+
+/* The section nav's shared frost would show as a pale box over the fade; in light each nav
+   button's own frosted fill is enough */
+:root:not(.dark) .nav-panel {
+  background-color: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+:root:not(.dark) .hero-wash .hero-photo {
+  opacity: 1;
+  filter: saturate(1.15) brightness(1.08);
+  animation: none;
+}
+
+:root:not(.dark) .hero-occluder,
+:root:not(.dark) .particles {
+  display: none;
+}
+
+/* On the light band the greeting reads light-on-photo, so the hero gets its own text tones */
+:root:not(.dark) .home-hero {
+  --foreground: #fbfaf6;
+  --subtle-foreground: #e6e7e9;
+  --muted-foreground: #cfd1d5;
+  --hover: rgb(255 255 255 / 0.16);
+  color: var(--foreground);
+}
+
+:root:not(.dark) .home-hero h1 {
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.45), 0 0 18px rgb(0 0 0 / 0.35);
+}
+
+.hero-name {
+  color: var(--hero-name);
+}
+
+/* Parallax: as the page scrolls, the photo slides down at a fraction of the scroll speed
+   (so it trails the content) and fades out. Scroll-driven, no script; static where unsupported. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-wash img,
+    .hero-occluder .hero-silhouette {
+      transform-origin: 50% 30%;
+      will-change: transform, opacity;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0 90vh;
+    }
+    .hero-wash .hero-photo {
+      animation-name: hero-parallax;
+    }
+    .hero-occluder .hero-silhouette {
+      animation-name: hero-parallax-silhouette;
+    }
+  }
+}
+
+@keyframes hero-parallax {
+  to {
+    transform: translateY(32vh) scale(1.06);
+    opacity: 0.06;
+  }
+}
+
+/* The silhouette moves exactly with the photo and fades out with it */
+@keyframes hero-parallax-silhouette {
+  to {
+    transform: translateY(32vh) scale(1.06);
+    opacity: 0.25;
+  }
+}
+
+/* Showcase carousel between Projects and Experience (ProjectShowcase.astro): one project at a
+   time in the right column. Clips play through, then it advances. */
+.showcase-viewport {
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.showcase-container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+}
+
+.showcase-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.showcase-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--tint-wash);
+  box-shadow: inset 0 0 0 1px var(--tint-edge);
+}
+
+.showcase-frame :is(img, video) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Phone-shaped recordings sit whole in the 16:10 frame, scaled to its height */
+.showcase-slide[data-fit="contain"] .showcase-frame :is(img, video) {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  width: auto;
+  height: calc(100% - 36px);
+  transform: translateX(-50%);
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px var(--tint-edge);
+}
+
+.showcase-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.showcase-caption {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--foreground);
+  white-space: nowrap;
+}
+
+.showcase-caption--plain {
+  color: var(--muted-foreground);
+  font-weight: 400;
+}
+
+.showcase-caption:hover .project-arrow,
+.showcase-caption:focus-visible .project-arrow {
+  color: var(--brand);
+  transform: translate(2px, -2px);
+}
+
+/* One segment per project; the current one fills as its clip plays. Each is a button. */
+.showcase-bars {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  min-width: 0;
+}
+
+.showcase-bar {
+  flex: 1;
+  height: 18px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.showcase-bar i {
+  display: block;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--foreground) 14%, transparent);
+  transition: background-color 0.2s;
+}
+
+.showcase-bar:hover i {
+  background: color-mix(in srgb, var(--foreground) 24%, transparent);
+}
+
+.showcase-bar b {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: color-mix(in srgb, var(--foreground) 65%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.showcase-bar.done b {
+  transform: scaleX(1);
+}
+
+.showcase-arrows {
+  display: flex;
+  gap: 6px;
+}
+
+.showcase-arrow {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--muted-foreground);
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition:
+    color 0.2s,
+    box-shadow 0.2s,
+    background-color 0.2s;
+}
+
+.showcase-arrow:hover {
+  color: var(--foreground);
+  background: var(--hover);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--foreground) 22%, transparent);
+}
+
+.showcase-arrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 640px) {
+  .showcase-arrows {
+    display: none;
+  }
+}
+
+/* Still star-like particles behind the page that brighten near the pointer (see Particles.astro). Behind all content, so frosted
+   surfaces blur it and it never sits over text. */
+.particles {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ===================== Post reader (blog/[...slug].astro) ===================== */
+
+:root {
+  --font-reader-serif: "Source Serif 4 Variable", Georgia, serif;
+  --reader-size: 20px;
+}
+
+/* Page colours. "site" is the site's own dark; the others override the shared tokens so
+   every surface on the page (bar, settings, code) follows the chosen page. */
+html[data-reader-theme] {
+  --reader-code: color-mix(in oklab, var(--background), var(--foreground) 5%);
+  --reader-accent: var(--link);
+}
+html[data-reader-theme="paper"] {
+  --subtle-foreground: #4a4a50;
+  --background: #f6f5f1;
+  --foreground: #1d1d20;
+  --card: #fbfaf7;
+  --muted: #ecebe6;
+  --muted-foreground: #66666c;
+  --border: #e0ded7;
+  --reader-code: #eeece6;
+  --reader-accent: oklch(0.48 0.12 295);
+}
+html[data-reader-theme="sepia"] {
+  --subtle-foreground: #5e4e3a;
+  --background: #f1e7d4;
+  --foreground: #3a2e21;
+  --card: #f6eedf;
+  --muted: #e8dcc5;
+  --muted-foreground: #78664e;
+  --border: #dccfb5;
+  --reader-code: #eadfc7;
+  --reader-accent: oklch(0.48 0.09 55);
+}
+html[data-reader-theme="night"] {
+  --subtle-foreground: #9a9ba3;
+  --background: #0e0f12;
+  --foreground: #c3c3c9;
+  --card: #15161a;
+  --muted: #1c1d22;
+  --muted-foreground: #7d7e86;
+  --border: #24252b;
+  --reader-code: #16171b;
+  --reader-accent: oklch(0.72 0.08 295);
+}
+
+html[data-reader-theme] body {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.reader-page ::selection {
+  background: color-mix(in srgb, var(--reader-accent) 30%, transparent);
+  color: inherit;
+}
+
+/* Top bar: always present. It "condenses" (title and hairline fade in together) once the
+   post's own title has scrolled under it; nothing else about it changes while reading. */
+.reader-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 56px;
+  padding: 0 12px;
+  background: color-mix(in srgb, var(--background) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 transparent;
+  transition: box-shadow 0.3s ease;
+}
+.reader-bar.condensed {
+  box-shadow: 0 1px 0 var(--border);
+}
+
+.reader-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px 0 8px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+.reader-back:hover {
+  background: var(--hover);
+  color: var(--foreground);
+}
+.reader-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+.reader-bar-title {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+.reader-bar.condensed .reader-bar-title {
+  opacity: 1;
+  transform: none;
+}
+
+/* Right-hand slot; matches the back link's width so the title stays centred */
+.reader-bar-actions {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 84px;
+}
+
+.reader-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: var(--muted-foreground);
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+.reader-icon-btn:hover,
+.reader-icon-btn[aria-expanded="true"] {
+  background: var(--hover);
+  color: var(--foreground);
+}
+.reader-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Settings panel */
+.reader-settings-anchor {
+  position: relative;
+}
+.reader-settings {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 40;
+  width: 312px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow:
+    0 0 0 1px var(--border),
+    0 24px 48px -20px rgb(0 0 0 / 0.45);
+  font-size: 13px;
+}
+.reader-settings[hidden] {
+  display: none;
+}
+.rs-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+}
+.rs-reset {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+.rs-reset:hover:not(:disabled) {
+  color: var(--foreground);
+}
+.rs-reset:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+.rs-label {
+  margin: 16px 0 8px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.rs-stepper {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1fr;
+  align-items: center;
+  height: 42px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.rs-stepper button {
+  height: 100%;
+  border-radius: 10px;
+  font-family: var(--font-reader-serif);
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+.rs-stepper .rs-big {
+  font-size: 21px;
+}
+.rs-stepper button:hover {
+  background: var(--hover);
+}
+.rs-stepper span {
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Page colours shown as tiny pages: painted in their own colour, with their own text */
+.rs-pages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.rs-page,
+.rs-font {
+  display: grid;
+  gap: 7px;
+  justify-items: center;
+}
+.rs-page-preview {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  padding: 9px 9px 0;
+  border-radius: 10px;
+  background: var(--p-bg);
+  color: var(--p-fg);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--p-fg) 14%, transparent);
+  transition: box-shadow 0.2s;
+}
+.rs-page-aa {
+  font-family: var(--font-reader-serif);
+  font-size: 17px;
+  line-height: 1;
+}
+.rs-page-lines {
+  display: grid;
+  gap: 4px;
+}
+.rs-page-lines i {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--p-line);
+}
+.rs-page-lines i:nth-child(2) {
+  width: 80%;
+}
+.rs-page-lines i:nth-child(3) {
+  width: 55%;
+}
+.rs-check {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 16px;
+  height: 16px;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--reader-accent);
+  color: var(--background);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+.rs-name {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.rs-page:hover .rs-page-preview {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--p-fg) 30%, transparent);
+}
+.rs-page[aria-checked="true"] .rs-page-preview {
+  box-shadow:
+    0 0 0 2px var(--card),
+    0 0 0 3.5px var(--reader-accent);
+}
+.rs-page[aria-checked="true"] .rs-check {
+  opacity: 1;
+  transform: none;
+}
+.rs-page[aria-checked="true"] .rs-name,
+.rs-font[aria-checked="true"] .rs-name {
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+.rs-fonts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.rs-font-aa {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 46px;
+  border-radius: 10px;
+  font-size: 20px;
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition: box-shadow 0.2s;
+}
+.rs-font:hover .rs-font-aa {
+  box-shadow: inset 0 0 0 1px var(--muted-foreground);
+}
+.rs-font[aria-checked="true"] .rs-font-aa {
+  box-shadow:
+    0 0 0 2px var(--card),
+    0 0 0 3.5px var(--reader-accent);
+}
+
+.rs-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 500;
+}
+.rs-switch-row small {
+  display: block;
+  margin-top: 1px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+.rs-switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--border);
+  transition: background-color 0.2s;
+}
+.rs-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--foreground);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rs-switch[aria-checked="true"] {
+  background: var(--reader-accent);
+}
+.rs-switch[aria-checked="true"] .rs-switch-thumb {
+  transform: translateX(16px);
+  background: var(--card);
+}
+
+/* Reading column */
+.reader-main {
+  padding: 64px 24px 120px;
+}
+.reader-article {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.reader-head {
+  margin-bottom: 48px;
+}
+.reader-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.reader-head h1 {
+  margin-top: 16px;
+  font-size: clamp(30px, 4.2vw, 40px);
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.reader-dek {
+  margin-top: 14px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--subtle-foreground);
+  text-wrap: pretty;
+}
+
+.reader-prose {
+  font-size: var(--reader-size);
+  line-height: 1.75;
+  font-family: var(--font-reader-serif);
+}
+html[data-reader-font="sans"] .reader-prose {
+  font-family: var(--font-sans);
+  line-height: 1.7;
+}
+.reader-prose > * + * {
+  margin-top: 1.05em;
+}
+.reader-prose p {
+  text-wrap: pretty;
+}
+/* Optional justified text, hyphenated so the spacing stays even */
+html[data-reader-justify="true"] .reader-prose p {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
+}
+/* Code and links keep their words whole */
+.reader-prose :is(code, a) {
+  hyphens: manual;
+  -webkit-hyphens: manual;
+}
+.reader-prose em {
+  font-style: italic;
+}
+.reader-prose strong {
+  font-weight: 650;
+}
+.reader-prose a {
+  color: var(--reader-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.reader-prose h2,
+.reader-prose h3 {
+  margin-top: 1.8em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.reader-prose h2 {
+  font-size: 1.25em;
+}
+.reader-prose h3 {
+  font-size: 1.08em;
+}
+.reader-prose ul,
+.reader-prose ol {
+  padding-left: 1.3em;
+}
+.reader-prose ul {
+  list-style: disc;
+}
+.reader-prose ol {
+  list-style: decimal;
+}
+.reader-prose blockquote {
+  padding-left: 1em;
+  border-left: 2px solid var(--border);
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+.reader-prose :not(pre) > code {
+  padding: 0.15em 0.35em;
+  border-radius: 5px;
+  background: var(--reader-code);
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+}
+.reader-prose pre {
+  margin-block: 1.6em;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: var(--reader-code) !important;
+  box-shadow: 0 0 0 1px var(--border);
+  overflow-x: auto;
+  font-size: 13.5px;
+  line-height: 1.65;
+  tab-size: 2;
+}
+.reader-prose pre code {
+  font-family: var(--font-mono);
+}
+
+.reader-end {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.reader-end-link {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  transition: color 0.2s;
+}
+.reader-end-link:hover {
+  color: var(--foreground);
+}
+
+/* Status line: progress and time left */
+.reader-status {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 34px;
+  padding: 0 16px;
+  background: color-mix(in srgb, var(--background) 90%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -1px 0 var(--border);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.reader-status-bar {
+  flex: 1;
+  max-width: 220px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--border);
+  overflow: hidden;
+}
+.reader-status-bar i {
+  display: block;
+  height: 100%;
+  background: var(--muted-foreground);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.reader-status-text {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --reader-size: 18.5px;
+  }
+  .reader-main {
+    padding-top: 40px;
+  }
+  .reader-settings {
+    position: fixed;
+    inset: auto 8px 8px;
+    width: auto;
+    border-radius: 18px;
+  }
+}
+
+/* Experience: dates in a narrow column, then role · company, summary, highlights and pills.
+   Shares the project cards' frosted hover. */
+.experience-row {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  column-gap: 20px;
+  padding: 18px 16px;
+  border-radius: 16px;
+}
+.experience-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: color-mix(in srgb, var(--foreground) 3.5%, transparent);
+  -webkit-backdrop-filter: blur(2.5px) brightness(1.15);
+  backdrop-filter: blur(2.5px) brightness(1.15);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.experience-row:hover::before,
+.experience-row:focus-within::before {
+  opacity: 1;
+}
+.experience-dates {
+  padding-top: 3px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.experience-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+.experience-at {
+  margin: 0 6px;
+  color: var(--muted-foreground);
+  font-weight: 400;
+}
+.experience-company {
+  display: inline;
+  transition: color 0.2s;
+}
+.experience-company:hover {
+  color: var(--subtle-foreground);
+}
+.experience-company:hover .project-arrow,
+.experience-company:focus-visible .project-arrow {
+  color: var(--brand);
+  transform: translate(2px, -2px);
+}
+.experience-summary {
+  margin-top: 8px;
+  max-width: 62ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--subtle-foreground);
+}
+.experience-highlights {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  max-width: 62ch;
+  padding-left: 1.1em;
+  list-style: disc;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+}
+.experience-highlights li::marker {
+  color: color-mix(in oklab, var(--brand) 80%, transparent);
+}
+.experience-row .project-stack {
+  margin-top: 14px;
+}
+@media (max-width: 640px) {
+  .experience-row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 6px;
+  }
+  .experience-dates {
+    padding-top: 0;
+  }
+}
+
+/* Section nav panel: sits above the showcase band (which reaches under this column) and
+   frosts whatever scrolls behind it */
+.nav-panel {
+  width: fit-content;
+  margin: -8px;
+  padding: 8px;
+  border-radius: 18px;
+  background-color: color-mix(in srgb, var(--background) 72%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+/* When the work on a project (or one of its editions) happened, on its page */
+.project-period {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Project pages (pages/projects/[slug].astro): a header, then a carousel of the project's clips with chapters
+   (MediaCarousel.astro), then About beside the facts. */
+.project-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 24px;
+}
+
+/* Tabs for a project with editions (Remlang: Mobile and Web), a segmented control */
+.project-tabs-wrap {
+  margin-top: 32px;
+}
+
+.project-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: inset 0 0 0 1px var(--tint-edge);
+}
+
+.project-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.project-tab:hover {
+  color: var(--foreground);
+  background: var(--hover);
+}
+
+.project-tab[aria-selected="true"] {
+  color: var(--foreground);
+  background: var(--tint-tile);
+}
+
+.project-tab-sub {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+
+.project-tab:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--foreground) 40%, transparent);
+  outline-offset: 2px;
+}
+
+.project-panel {
+  margin-top: 24px;
+}
+
+.project-panel:not([hidden]) {
+  animation: project-panel-in 0.3s ease;
+}
+
+@keyframes project-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.project-below {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 32px 56px;
+  margin-top: 72px;
+}
+
+.project-facts {
+  display: grid;
+  align-self: start;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px 20px;
+  align-content: start;
+  margin: 0;
+  padding: 22px;
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: inset 0 0 0 1px var(--tint-edge);
+  font-size: 15px;
+}
+
+.project-facts dt {
+  padding-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.project-facts dd {
+  margin: 0;
+}
+
+.project-facts-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.project-facts-link:hover .project-arrow {
+  color: var(--tint-ink);
+  transform: translate(2px, -2px);
+}
+
+@media (max-width: 860px) {
+  .project-below {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Carousel with chapters (MediaCarousel `chapters`, on project pages): the carousel and a list
+   of its slides side by side in one panel. The current chapter opens to show its text and a bar
+   that fills as its clip plays. */
+.showcase--chapters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 20px;
+  padding: 12px;
+  border-radius: 22px;
+  background: var(--card);
+  box-shadow: inset 0 0 0 1px var(--tint-edge);
+}
+
+.showcase--chapters .showcase-viewport,
+.showcase--chapters .showcase-frame {
+  border-radius: 13px;
+}
+
+/* The chapter list does the navigating on wide screens */
+.showcase--chapters .showcase-controls,
+.showcase-description {
+  display: none;
+}
+
+/* Phone recordings stand on a softly lit stage inside the 16:10 frame */
+.showcase-slide[data-fit="contain"] .showcase-frame {
+  background:
+    radial-gradient(60% 75% at 50% 55%, color-mix(in oklch, var(--tint-deep) 55%, transparent), transparent 75%),
+    var(--tint-wash);
+}
+
+.showcase-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 6px 4px;
+  list-style: none;
+}
+
+.showcase-chapter {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 14px 16px 16px;
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.showcase-chapter:hover {
+  background: color-mix(in oklab, var(--tint-tile) 65%, transparent);
+}
+
+.showcase-chapter.on {
+  background: var(--tint-tile);
+}
+
+.showcase-chapter-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--muted-foreground);
+  transition: color 0.2s;
+}
+
+.showcase-chapter.on .showcase-chapter-title,
+.showcase-chapter:hover .showcase-chapter-title {
+  color: var(--foreground);
+}
+
+.showcase-chapter-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+
+/* The text opens only on the current chapter (grid rows animate the height) */
+.showcase-chapter-text {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--subtle-foreground);
+  transition:
+    grid-template-rows 0.35s,
+    margin-top 0.35s;
+}
+
+.showcase-chapter-text > span {
+  overflow: hidden;
+}
+
+.showcase-chapter.on .showcase-chapter-text {
+  grid-template-rows: 1fr;
+  margin-top: 8px;
+}
+
+.showcase-chapter-progress {
+  position: absolute;
+  right: 16px;
+  bottom: 6px;
+  left: 16px;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--foreground) 10%, transparent);
+  opacity: 0;
+}
+
+.showcase-chapter.on .showcase-chapter-progress {
+  opacity: 1;
+}
+
+.showcase-chapter-progress b {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: var(--tint-ink);
+}
+
+/* One slide: nothing to choose, so its title and text simply sit beside it */
+.showcase--chapters:not(:has(.showcase-bar)) .showcase-chapter {
+  cursor: default;
+  background: none;
+}
+
+.showcase--chapters:not(:has(.showcase-bar)) .showcase-chapter-title {
+  color: var(--foreground);
+}
+
+/* Narrow screens: the list gives way to the carousel's own segments, with the current slide's
+   title and description under them */
+@media (max-width: 900px) {
+  .showcase--chapters {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .showcase-chapters {
+    display: none;
+  }
+
+  .showcase--chapters .showcase-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+
+  .showcase--chapters .showcase-bars {
+    order: -1;
+    flex-basis: 100%;
+  }
+
+  .showcase--chapters .showcase-caption {
+    flex: 1;
+    min-width: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--foreground);
+    white-space: normal;
+  }
+
+  .showcase--chapters .showcase-arrow {
+    width: 28px;
+    height: 28px;
+  }
+
+  .showcase-description {
+    display: block;
+    margin-top: 6px;
+    padding: 0 4px 6px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--subtle-foreground);
+  }
+
+  /* Too narrow for a phone inside a 16:10 stage: the frame takes the phone's own shape */
+  .showcase--phone .showcase-viewport {
+    width: min(100%, 280px);
+    margin-inline: auto;
+  }
+
+  .showcase--phone .showcase-slide[data-fit="contain"] .showcase-frame {
+    aspect-ratio: 800 / 1580;
+    background: var(--tint-wash);
+  }
+
+  .showcase--phone .showcase-slide[data-fit="contain"] .showcase-frame :is(img, video) {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}

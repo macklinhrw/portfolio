@@ -1,0 +1,18 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import PostList from "@/components/PostList.astro";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<Layout title="Blog" description="Posts by Macklin">
+  <h1
+    class="pt-16 text-[32px] leading-[1.15] font-semibold tracking-[-0.03em] sm:pt-20 sm:text-[40px]"
+  >
+    Blog
+  </h1>
+  <PostList posts={posts} class="mt-10" />
+</Layout>

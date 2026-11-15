@@ -1,0 +1,116 @@
+---
+import "@fontsource-variable/source-serif-4/opsz.css";
+import "@fontsource-variable/source-serif-4/opsz-italic.css";
+import { getCollection, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import ReaderBar from "@/components/ReaderBar.astro";
+import ReaderSettings from "@/components/reader/ReaderSettings.astro";
+import { formatDate } from "@/lib/utils";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+// Reading time from the prose only; code blocks are skimmed, not read word by word.
+const WORDS_PER_MINUTE = 230;
+const words = (post.body ?? "").replace(/```[\s\S]*?```/g, "").split(/\s+/).filter(Boolean).length;
+const minutes = Math.max(1, Math.round(words / WORDS_PER_MINUTE));
+---
+
+<Layout title={post.data.title} description={post.data.description} variant="reader">
+  {/* Apply saved reading settings before first paint, so a light page never flashes dark. */}
+  <script is:inline slot="head">
+    (() => {
+      try {
+        const s = JSON.parse(localStorage.getItem("reader-settings") || "{}");
+        const sizes = [17, 18.5, 20, 21.5, 23, 25];
+        const theme = ["site", "paper", "sepia", "night"].includes(s.theme) ? s.theme : "site";
+        const html = document.documentElement;
+        html.dataset.readerTheme = theme;
+        html.dataset.readerFont = s.font === "sans" ? "sans" : "serif";
+        html.dataset.readerJustify = s.justify === true ? "true" : "false";
+        if (Number.isInteger(s.size) && sizes[s.size]) html.style.setProperty("--reader-size", sizes[s.size] + "px");
+        // "Site" keeps the site theme set by Layout.astro; the other pages pick their own.
+        if (theme === "paper" || theme === "sepia") {
+          html.classList.remove("dark");
+          html.style.colorScheme = "light";
+        } else if (theme === "night") {
+          html.classList.add("dark");
+          html.style.colorScheme = "dark";
+        }
+      } catch {}
+    })();
+  </script>
+
+  <div class="reader-page">
+    <ReaderBar title={post.data.title}>
+      <ReaderSettings />
+    </ReaderBar>
+
+    <main class="reader-main">
+      <article class="reader-article" data-reader-article data-words={words}>
+        <header class="reader-head">
+          <p class="reader-meta">
+            <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+            <span aria-hidden="true">·</span>
+            <span>{minutes} min read</span>
+          </p>
+          <h1 data-reader-title>{post.data.title}</h1>
+          {post.data.description && <p class="reader-dek">{post.data.description}</p>}
+        </header>
+
+        <div class="reader-prose">
+          <Content />
+        </div>
+
+        <footer class="reader-end">
+          <a href="/blog" class="reader-end-link">All posts</a>
+        </footer>
+      </article>
+    </main>
+
+    <div class="reader-status" aria-hidden="true">
+      <span class="reader-status-bar"><i data-reader-progress></i></span>
+      <span class="reader-status-text">
+        <span data-reader-percent>0%</span>
+        <span>·</span>
+        <span data-reader-left>{minutes} min left</span>
+      </span>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const article = document.querySelector<HTMLElement>("[data-reader-article]");
+  const fill = document.querySelector<HTMLElement>("[data-reader-progress]");
+  const percent = document.querySelector<HTMLElement>("[data-reader-percent]");
+  const left = document.querySelector<HTMLElement>("[data-reader-left]");
+
+  // Progress and time left, measured through the article.
+  if (article && fill && percent && left) {
+    const words = Number(article.dataset.words) || 0;
+    let queued = false;
+    const update = () => {
+      queued = false;
+      const rect = article.getBoundingClientRect();
+      const distance = rect.height - innerHeight * 0.6;
+      const p = Math.max(0, Math.min(1, (innerHeight * 0.4 - rect.top) / Math.max(1, distance)));
+      fill.style.transform = `scaleX(${p})`;
+      percent.textContent = `${Math.round(p * 100)}%`;
+      left.textContent = p >= 0.99 ? "Finished" : `${Math.max(1, Math.round(((1 - p) * words) / 230))} min left`;
+    };
+    const queue = () => {
+      if (!queued) {
+        queued = true;
+        requestAnimationFrame(update);
+      }
+    };
+    addEventListener("scroll", queue, { passive: true });
+    addEventListener("resize", queue);
+    update();
+  }
+</script>

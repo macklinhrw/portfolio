@@ -1,0 +1,51 @@
+---
+// Switches the site between its dark theme (the default) and its light theme. The choice is
+// stored in localStorage as "theme" and applied before first paint by the inline script in
+// Layout.astro. Shows a sun while dark (switch to light) and a moon while light.
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<button
+  type="button"
+  class:list={["theme-toggle", className]}
+  data-theme-toggle
+  aria-label="Switch to light theme"
+>
+  <svg class="theme-icon-sun" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+    <circle cx="10" cy="10" r="3.4"></circle>
+    <path d="M10 2.2v1.6M10 16.2v1.6M2.2 10h1.6M16.2 10h1.6M4.5 4.5l1.1 1.1M14.4 14.4l1.1 1.1M4.5 15.5l1.1-1.1M14.4 5.6l1.1-1.1"></path>
+  </svg>
+  <svg class="theme-icon-moon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">
+    <path d="M16.5 12.3A6.8 6.8 0 0 1 7.7 3.5a6.8 6.8 0 1 0 8.8 8.8Z"></path>
+  </svg>
+</button>
+
+<script>
+  import { readSiteTheme, switchSiteTheme } from "@/lib/theme";
+
+  const label = (dark: boolean) => (dark ? "Switch to light theme" : "Switch to dark theme");
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]");
+  const sync = () => {
+    const dark = readSiteTheme() === "dark";
+    buttons.forEach((b) => b.setAttribute("aria-label", label(dark)));
+  };
+
+  buttons.forEach((button) =>
+    button.addEventListener("click", () => {
+      const next = readSiteTheme() === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem("theme", next);
+      } catch {}
+      // The new theme grows out from the middle of the button that was pressed.
+      const box = button.getBoundingClientRect();
+      switchSiteTheme(next, { x: box.left + box.width / 2, y: box.top + box.height / 2 });
+      sync();
+    }),
+  );
+  sync();
+</script>
