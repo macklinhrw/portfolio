@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 801" preserveAspectRatio="none">
+  <!-- Mountain, hills and lake from hero-fuji.jpg, traced at 1200 × 801. Used as a mask: the page
+       background is drawn in this shape so stars don't show through the mountain. -->
+  <path fill="#000" d="M0 274 L40 288 L100 304 L150 320 L200 327 L250 329 L290 338 L322 348
+    L362 334 L410 318 L442 304 L480 289 L520 268 L560 251 L598 240 L622 243 L660 262 L700 282
+    L742 300 L790 324 L830 330 L870 335 L900 343 L940 354 L980 361 L1020 364 L1080 367
+    L1140 369 L1200 370 L1200 801 L0 801 Z"/>
+</svg>
