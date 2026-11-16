@@ -3,7 +3,7 @@ name: Odincraft
 platforms: macOS
 period: Mar 2026 – Present
 description: Originally named Zigcraft, this project has been a longtime vision of mine to create a 3D colony sim with a realistically generated world and endless view distance. Lately, it has become my ongoing benchmark for new LLM releases.
-tagline: A block world generated to feel like a real place, drawn all the way to the horizon.
+tagline: Realistic world generation and view distance to the horizon.
 stack: [Odin, SDL3, Metal]
 icon: mountain
 hue: 75
