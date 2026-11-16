@@ -1,0 +1,56 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import PostList from "@/components/PostList.astro";
+import ProjectList from "@/components/ProjectList.astro";
+
+const projects = (await getCollection("projects", ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<Layout title="Macklin" description="Macklin's portfolio and blog">
+  <section class="pt-16 pb-16 sm:pt-28 sm:pb-24">
+    <h1
+      class="text-[34px] leading-[1.1] font-semibold tracking-[-0.035em] text-balance sm:text-[44px]"
+    >
+      Hello, I'm Macklin.
+    </h1>
+    <p class="mt-4 max-w-[50ch] text-[17px] leading-[1.65] text-pretty text-muted-foreground sm:text-lg">
+      I'm a software engineer. My lifelong goal is to create experiences that leave a lasting
+      impact.
+    </p>
+  </section>
+
+  {
+    projects.length > 0 && (
+      <section aria-labelledby="projects-heading">
+        <h2 id="projects-heading" class="mb-3 text-sm font-medium text-muted-foreground">
+          Projects
+        </h2>
+        <ProjectList projects={projects} />
+      </section>
+    )
+  }
+
+  {
+    posts.length > 0 && (
+      <section class="mt-16 sm:mt-22" aria-labelledby="writing-heading">
+        <h2 id="writing-heading" class="mb-3 text-sm font-medium text-muted-foreground">
+          Writing
+        </h2>
+        <PostList posts={posts} />
+        <a
+          href="/blog"
+          class="mt-4 inline-block text-[14.5px] text-muted-foreground transition-colors hover:text-foreground"
+        >
+          All posts
+        </a>
+      </section>
+    )
+  }
+</Layout>
