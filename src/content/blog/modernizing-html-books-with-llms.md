@@ -4,7 +4,7 @@ description: "Migrating an internet archive of hardcoded HTML books using struct
 pubDate: 2026-11-11
 ---
 
-It was about 5 years ago when I was first presented with a problem. It was my freshman year of college, and I had been introduced to a small company. They are an internet archive which it wouldn't be an exaggeration to call as old as the internet itself. However, with that sort of history come some important technical implications. The site was driven by HTML. More specifically, the more than 2,000(footnote 1) books (and some articles) that were its foundation were _hardcoded_ in HTML, many of them following a different standard for markup. My job was to put these into a database.
+It was about 5 years ago when I was first presented with a problem. It was my freshman year of college, and I had been introduced to a small company. They are an internet archive which it wouldn't be an exaggeration to call as old as the internet itself. However, with that sort of history come some important technical implications. The site was driven by HTML. More specifically, the roughly 2,000[^1] books (and some articles) that were its foundation were _hardcoded_ in HTML, many of them following a different standard for markup. My job was to put these into a database.
 
 ```prisma
 model Book {
@@ -91,4 +91,4 @@ It's hard to overstate the importance of this problem to the business, and the u
 
 After I decided to tackle it, I was overconfident in thinking I could solve it sooner. But after experiencing edge case after edge case and variables (like the nested TOC) that threw the plan off, I realized I wasn't going to get there through a brute force single-pass solution. The slow but thorough approach involving regression testing and incremental gains was what eventually made this impossible problem possible, and what I learned is that a measured approach beats a hasty one.
 
-Thanks for reading!
+[^1]: The archive has 3,071 entries. Counting only the ones that are clearly books, with each volume and each book inside a collection counted separately, and leaving out articles and short pieces, comes to about 2,000.

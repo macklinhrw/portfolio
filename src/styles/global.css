@@ -1549,10 +1549,49 @@ html[data-reader-justify="true"] .reader-prose p {
   font-family: var(--font-mono);
 }
 
-.reader-end {
+/* End piece (lib/post-end-plugin.mjs): under one rule, the sign-off, the footnotes, then the link back */
+.reader-prose > .reader-fin {
   margin-top: 56px;
-  padding-top: 24px;
+  padding-top: 28px;
   border-top: 1px solid var(--border);
+  font-family: var(--font-reader-serif);
+  font-style: italic;
+  color: var(--foreground);
+}
+.reader-prose sup {
+  line-height: 0;
+}
+.reader-prose [data-footnote-ref] {
+  padding: 0 2px;
+  font-family: var(--font-sans);
+  font-size: 0.68em;
+  font-weight: 600;
+  text-decoration: none;
+}
+.reader-prose .footnotes {
+  margin-top: 20px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+}
+.reader-prose .footnotes p {
+  text-align: left;
+}
+/* The "Footnotes" label is for screen readers only (Tailwind doesn't see Markdown output) */
+.reader-prose .footnotes > h2 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.reader-prose .footnotes [data-footnote-backref] {
+  text-decoration: none;
+}
+.reader-end {
+  margin-top: 24px;
 }
 .reader-end-link {
   font-size: 14.5px;
