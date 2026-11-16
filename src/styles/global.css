@@ -1685,6 +1685,56 @@ html[data-reader-justify="true"] .reader-prose p {
     overscroll-behavior: contain;
     border-radius: 18px;
   }
+
+  /* Posts on a phone: the bar moves to the bottom, within thumb reach, and takes the progress
+     with it. Back on the left, settings on the right, the progress line along the bar's top
+     edge and "7% · 7 min left" between them; the reading column gets the whole top. */
+  .reader-page {
+    --reader-dock: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+  .reader-page .reader-bar {
+    position: fixed;
+    inset: auto 0 0;
+    height: var(--reader-dock);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-shadow: 0 -1px 0 var(--border);
+  }
+  .reader-page .reader-bar-title {
+    display: none;
+  }
+  .reader-page .reader-bar-actions {
+    margin-left: auto;
+  }
+  /* The status line becomes the middle of the bar: drawn over it, not clickable */
+  .reader-page .reader-status {
+    z-index: 31;
+    height: var(--reader-dock);
+    padding: 0 0 env(safe-area-inset-bottom, 0px);
+    justify-content: center;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    pointer-events: none;
+  }
+  .reader-page .reader-status-bar {
+    position: absolute;
+    inset: 0 0 auto;
+    max-width: none;
+    border-radius: 0;
+    background: transparent;
+  }
+  .reader-page .reader-status-bar i {
+    background: var(--reader-accent);
+  }
+  .reader-page .reader-main {
+    padding-bottom: calc(var(--reader-dock) + 64px);
+  }
+  /* The settings sheet rises from just above the bar */
+  .reader-page .reader-settings {
+    bottom: calc(var(--reader-dock) + 8px);
+    max-height: calc(100dvh - var(--reader-dock) - 16px);
+  }
 }
 
 /* Experience: dates in a narrow column, then role · company, summary, highlights and pills.
