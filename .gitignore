@@ -31,3 +31,4 @@ PRODUCT.md
 
 # Cloudflare build output
 .cloudflare/
+.wrangler/
