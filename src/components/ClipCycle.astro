@@ -106,7 +106,9 @@ const isStill = (src: string) => /\.(webp|png|jpe?g|avif)$/i.test(src);
       const video = videos[current];
       const timed = runsOnTimer(current);
       if (!timed && video && !Number.isFinite(video.duration)) {
+        // iOS Safari often ignores preload, so the length only arrives once playback starts.
         video.addEventListener("loadedmetadata", play, { once: true });
+        video.play().catch(() => {});
         return;
       }
       const total = timed || !video ? STILL_MS : video.duration * 1000;

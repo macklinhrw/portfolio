@@ -213,7 +213,9 @@ const arrow = "M5 11 11 5M6 5h5v5";
         return;
       }
       if (video && !Number.isFinite(video.duration)) {
+        // iOS Safari often ignores preload, so the length only arrives once playback starts.
         video.addEventListener("loadedmetadata", run, { once: true });
+        video.play().catch(() => {});
         return;
       }
       const total = video ? video.duration * 1000 : STILL_MS;
