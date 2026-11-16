@@ -1125,17 +1125,26 @@ html[data-reader-theme] body {
 .reader-bar {
   position: sticky;
   top: 0;
-  z-index: 20;
+  /* Above the status line (20), so the settings sheet inside it opens over that line */
+  z-index: 30;
   display: flex;
   align-items: center;
   gap: 16px;
   height: 56px;
   padding: 0 12px;
+  box-shadow: 0 1px 0 transparent;
+  transition: box-shadow 0.3s ease;
+}
+/* The frosted backing sits on its own layer: a backdrop-filter on the bar itself would make it
+   the containing block for fixed children, trapping the phone settings sheet inside the bar */
+.reader-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: color-mix(in srgb, var(--background) 88%, transparent);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  box-shadow: 0 1px 0 transparent;
-  transition: box-shadow 0.3s ease;
 }
 .reader-bar.condensed {
   box-shadow: 0 1px 0 var(--border);
@@ -1671,6 +1680,9 @@ html[data-reader-justify="true"] .reader-prose p {
     position: fixed;
     inset: auto 8px 8px;
     width: auto;
+    max-height: calc(100dvh - 16px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     border-radius: 18px;
   }
 }
