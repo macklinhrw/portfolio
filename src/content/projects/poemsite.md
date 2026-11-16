@@ -2,7 +2,7 @@
 name: Hunter Reeve Poetry
 platforms: Web
 period: Sep 2026
-description: A poem website I created for my grandmother, features a poem carousel and podcast player.
+description: A poetry website I created for my grandmother, featuring a poem carousel and a podcast player.
 tagline: A home for my grandmother's poems and her podcast.
 stack: [SvelteKit, Drizzle, PostgreSQL]
 icon: feather
@@ -18,11 +18,7 @@ clips:
   - src: /media/projects/poemsite-poem-scroll.mp4
     square: /media/projects/poemsite-poem-scroll-square.mp4
     label: A poem page
-    description: Every poem has a page of its own.
+    description: Every poem is displayed on its own page.
 ---
 
-Hunter Reeve Poetry collects my grandmother's poems in one place. The front page opens on a carousel of her most recent poems, with a shuffle that draws five at random from the whole collection, followed by every poem as a card and the latest podcast episode.
-
-Signed-in administrators get an editor for adding and updating poems: a plain text box, a photo picker, a live preview, and drafts that save as you type. Photos are resized and stored by the site itself.
-
-The site is built with SvelteKit, Drizzle and PostgreSQL, with Google sign-in through Better Auth, and has light and dark themes.
+I made this site in about 4 hours at my grandmother's request one evening. I think it is a good demonstration of a simple design that I enjoy.

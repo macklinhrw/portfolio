@@ -12,10 +12,10 @@ repos: [https://github.com/macklinhrw/odincraft]
 showcase: { src: /media/projects/odincraft-island.mp4, fit: cover }
 clips:
   - src: /media/projects/odincraft-island.mp4
-    label: From the forest floor to the whole island
-    description: Flying up out of the forest until the whole island, about 6 km across, is in view at once.
+    label: From small to large scale
+    description: The vision of the project is to feel immersed in an entire world. That means view distances to the horizon and performance optimization to match.
 ---
 
-Odincraft is a block world meant to feel like a real place, explored on foot. The current version forms an island about 6 km across in a second: a mountain range, valleys cut by running water, and rivers that follow those valleys to the sea. You can walk, fly, dig and build, with the land drawn to the horizon under sun shadows and haze, and water that flows into any ditch you dig from a river.
+This project started about a year ago, but really the desire for this concept goes back much further, to my childhood. I've always wanted to experience a completely immersive world, and it hasn't seemed possible until recently. This is strictly a side project, and I don't intend to be a game developer. However, that is less of an issue now with the latest models. It's still very early in development, but my optimism is growing. It is made with love.
 
-It started in Zig as Zigcraft and has been rebuilt more than ten times, in Zig and then Odin. Each new model release gets the same task, which makes it a running benchmark for how far LLM-assisted development has come.
+Inspirations include Dwarf Fortress, RimWorld, and various Minecraft mods.

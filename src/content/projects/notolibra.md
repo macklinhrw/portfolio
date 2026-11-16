@@ -2,30 +2,34 @@
 name: Notolibra
 platforms: Desktop
 period: Sep 2026 – Present
-description: "An operating system for your notes. No context switching: Annotate PDFs, Ebooks, and save web pages all inside the same app. Integrated AI can operate everything. Your notes are a graph you can navigate and search seamlessly."
+description: "An operating system for your notes. No context switching: annotate PDFs and ebooks, and save web pages, all inside the same app. Integrated AI can operate everything. Your notes are a graph you can navigate and search seamlessly."
 stack: [Rust, gpui]
 icon: document
 hue: 295
-tagline: Notes, the web, PDFs, ebooks and AI chat over one folder of Markdown.
+tagline: An operating system for your notes with no context switching needed.
 iconImage: /media/projects/notolibra-icon.svg
 order: 1
-repos: [https://github.com/macklinhrw/notolibra, https://github.com/macklinhrw/notolibra-engine]
+repos:
+  [
+    https://github.com/macklinhrw/notolibra,
+    https://github.com/macklinhrw/notolibra-engine,
+  ]
 showcase: { src: /media/projects/notolibra-3.mp4, fit: cover }
 clips:
   - src: /media/projects/notolibra-3.mp4
     label: Ask about what's on screen
-    description: Attach a screenshot, a note or a page and chat with Claude Code, Codex or OpenCode beside your work.
+    description: You can easily take a screenshot and ask a question with Claude Code or Codex open beside your work. For other pages, you can mention them using `@` and autocomplete.
   - src: /media/projects/notolibra-1.mp4
-    label: Every tool is an applet
-    description: About 35 of them, from a terminal to a drawing canvas, each a tab you can split and rearrange.
+    label: Applets and the pane system
+    description: There are about 35 applets, from a PDF viewer to a code editor, and each becomes a tab you can split and rearrange.
   - src: /media/projects/notolibra-2.mp4
     label: Vim mode
-    description: A full Vim mode in the editor, with a ⌘K palette that searches pages and blocks.
+    description: Not only can you edit your notes with Vim bindings, but you can even navigate the entire app using only your keyboard. Inspired by LunarVim and AstroNvim, among others.
   - src: /media/projects/notolibra-4.mp4
     label: Highlights become notes
     description: Highlights in books and PDFs are written into a note for that book, each linked back to its passage.
 ---
 
-Notolibra keeps notes, a browser, PDFs and books, chat, drawings and other applets in one app, all built on a folder of Markdown that a human and an AI work in together.
+The idea for this project came in 2022, about a month before the release of ChatGPT. However, I knew very clearly how ambitious it was and scrapped it reluctantly. It wasn't until recently, with more time on my hands and after revisiting my old notes, that it occurred to me it might actually be possible. I was still skeptical, but after getting more and more done, that skepticism has slowly been fading. There is still endless work to be done, but I'm starting to doubt there is anything stopping me from committing to it till the very end.
 
-The current app is native, written in Rust and drawn with gpui. It replaced an earlier Electron version.
+The idea came about from my use of various note-taking systems (known as personal knowledge management, or PKM). It's one thing to have the tool in front of you, but actually having it provide value requires a system, and friction in that system undermines its usage. That is what drove me to design an app that systematically removes all friction (context switching) that gets in the way of note-taking. Whenever I have an idea, no matter where I am, I should be able to write it down. Nothing should distract me from the idea.
