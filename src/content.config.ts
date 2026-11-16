@@ -72,7 +72,7 @@ const projects = defineCollection({
           /** Where this edition runs, e.g. "iOS, Android". */
           platforms: z.string().optional(),
           description: z.string(),
-          /** The edition's About text on the project page; blank lines separate paragraphs. */
+          /** The edition's About text on the project page; blank lines separate paragraphs. Left out or empty, the facts run as a strip under the media instead. */
           about: z.string().optional(),
           stack: z.array(z.string()),
           /** This edition's source repositories; replaces the project's `repos`. */

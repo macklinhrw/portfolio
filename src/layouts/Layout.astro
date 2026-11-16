@@ -46,6 +46,16 @@ const reader = variant === "reader";
         document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#faf7f1");
       })();
     </script>
+    {/* While the page scrolls under a still cursor, Safari keeps :hover on whatever row was
+        under it. Mark the page as scrolling until the pointer next moves, and the row hover
+        styles in global.css stand down meanwhile. */}
+    <script is:inline>
+      (() => {
+        const html = document.documentElement;
+        addEventListener("scroll", () => html.setAttribute("data-scrolling", ""), { passive: true });
+        addEventListener("pointermove", () => html.removeAttribute("data-scrolling"), { passive: true });
+      })();
+    </script>
     <slot name="head" />
   </head>
   <body class="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground antialiased">

@@ -101,34 +101,42 @@ const paragraphs = (text?: string) => (text ?? "").split(/\n\s*\n/).filter((p) =
             >
               <p class="max-w-[68ch] text-[16.5px] leading-[1.6] text-subtle-foreground">{edition.description}</p>
               <MediaCarousel slides={projectSlides(project, edition.label)} label={`${name} ${edition.label}`} chapters class="mt-6" />
-              <div class="project-below">
-                <div>
-                  <h2 class="text-[20px] font-semibold tracking-[-0.02em]">About</h2>
-                  <div class="prose prose-neutral mt-3 max-w-[64ch] dark:prose-invert">
-                    {paragraphs(edition.about ?? edition.description).map((p) => <p>{p}</p>)}
+              {paragraphs(edition.about).length > 0 ? (
+                <div class="project-below">
+                  <div>
+                    <h2 class="text-[20px] font-semibold tracking-[-0.02em]">About</h2>
+                    <div class="prose prose-neutral mt-3 max-w-[64ch] dark:prose-invert">
+                      {paragraphs(edition.about).map((p) => <p>{p}</p>)}
+                    </div>
                   </div>
+                  <ProjectFacts period={edition.period} platforms={edition.platforms ?? platforms} stack={edition.stack} url={url} repos={edition.repos ?? repos} />
                 </div>
-                <ProjectFacts period={edition.period} platforms={edition.platforms ?? platforms} stack={edition.stack} url={url} repos={edition.repos ?? repos} />
-              </div>
+              ) : (
+                <div class="project-below project-below--strip">
+                  <ProjectFacts period={edition.period} platforms={edition.platforms ?? platforms} stack={edition.stack} url={url} repos={edition.repos ?? repos} layout="strip" />
+                </div>
+              )}
             </section>
           ))}
         </div>
       ) : (
         <>
           <MediaCarousel slides={projectSlides(project)} label={name} chapters class="mt-8" />
-          <section class="project-below">
-            <div>
-              {hasBody && (
-                <>
-                  <h2 class="text-[20px] font-semibold tracking-[-0.02em]">About</h2>
-                  <div class="prose prose-neutral mt-3 max-w-[64ch] dark:prose-invert">
-                    <Content />
-                  </div>
-                </>
-              )}
-            </div>
-            <ProjectFacts period={period} platforms={platforms} stack={stack} url={url} repos={repos} />
-          </section>
+          {hasBody ? (
+            <section class="project-below">
+              <div>
+                <h2 class="text-[20px] font-semibold tracking-[-0.02em]">About</h2>
+                <div class="prose prose-neutral mt-3 max-w-[64ch] dark:prose-invert">
+                  <Content />
+                </div>
+              </div>
+              <ProjectFacts period={period} platforms={platforms} stack={stack} url={url} repos={repos} />
+            </section>
+          ) : (
+            <section class="project-below project-below--strip" aria-label="About this project">
+              <ProjectFacts period={period} platforms={platforms} stack={stack} url={url} repos={repos} layout="strip" />
+            </section>
+          )}
         </>
       )
     }

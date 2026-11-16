@@ -383,9 +383,16 @@ html[data-theme-transition="fade"]::view-transition-group(root) {
   pointer-events: none;
 }
 
-.project-row:hover::before,
+/* Hover only where there is a real pointer (a tap would leave it stuck on a phone), and not
+   while the page scrolls under a still cursor (see Layout.astro), so it can't linger on a row
+   the pointer has left. Keyboard focus shows it regardless. */
 .project-row:focus-visible::before {
   opacity: 1;
+}
+@media (hover: hover) {
+  html:not([data-scrolling]) .project-row:hover::before {
+    opacity: 1;
+  }
 }
 
 /* Light: cards lift off the paper (see --lift). The card keeps a breath of its project's hue. */
@@ -397,14 +404,21 @@ html[data-theme-transition="fade"]::view-transition-group(root) {
 }
 
 /* On hover the icon's colour deepens a step (light) or brightens a step (dark) */
-.project-row:hover,
 .project-row:focus-visible {
   --tint-ink: oklch(0.42 0.16 var(--hue, 268));
 }
 
-.dark .project-row:hover,
 .dark .project-row:focus-visible {
   --tint-ink: oklch(0.9 0.14 var(--hue, 268));
+}
+
+@media (hover: hover) {
+  html:not([data-scrolling]) .project-row:hover {
+    --tint-ink: oklch(0.42 0.16 var(--hue, 268));
+  }
+  html:not([data-scrolling]).dark .project-row:hover {
+    --tint-ink: oklch(0.9 0.14 var(--hue, 268));
+  }
 }
 
 /* Frosted surface for anything that can sit over the hero photo: a translucent page
@@ -477,10 +491,15 @@ html[data-theme-transition="fade"]::view-transition-group(root) {
     color 0.2s;
 }
 
-.project-row:hover .project-arrow,
 .project-row:focus-visible .project-arrow {
   color: var(--tint-ink);
   transform: translate(2px, -2px);
+}
+@media (hover: hover) {
+  html:not([data-scrolling]) .project-row:hover .project-arrow {
+    color: var(--tint-ink);
+    transform: translate(2px, -2px);
+  }
 }
 
 
@@ -1680,9 +1699,14 @@ html[data-reader-justify="true"] .reader-prose p {
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
-.experience-row:hover::before,
+/* Same hover rules as .project-row */
 .experience-row:focus-within::before {
   opacity: 1;
+}
+@media (hover: hover) {
+  html:not([data-scrolling]) .experience-row:hover::before {
+    opacity: 1;
+  }
 }
 .experience-dates {
   padding-top: 3px;
@@ -1928,6 +1952,37 @@ html[data-reader-justify="true"] .reader-prose p {
   margin: 0;
 }
 
+/* Beside About text, each fact's group stands aside so its label and value fill the two columns */
+.project-facts > div {
+  display: contents;
+}
+
+/* No About text (ProjectFacts layout="strip"): the facts run across under the media, a column
+   each, labels above values, like the caption of the work above them */
+.project-below--strip {
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 28px;
+}
+.project-facts--strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px 48px;
+  padding: 22px 26px;
+}
+.project-facts--strip > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+/* On a phone the columns pair up two by two rather than wrapping raggedly */
+@media (max-width: 640px) {
+  .project-facts--strip {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 24px;
+  }
+}
+
 .project-facts-link {
   display: inline-flex;
   align-items: center;
@@ -1964,6 +2019,16 @@ html[data-reader-justify="true"] .reader-prose p {
   border-radius: 13px;
 }
 
+/* Inline code in short Markdown strings (lib/inline-markdown.ts): clip descriptions, experience highlights */
+:is(.showcase-description, .showcase-chapter-text, .experience-highlights) code {
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--foreground) 8%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  color: var(--foreground);
+}
+
 /* The chapter list does the navigating on wide screens */
 .showcase--chapters .showcase-controls,
 .showcase-description {
@@ -1997,8 +2062,10 @@ html[data-reader-justify="true"] .reader-prose p {
   transition: background-color 0.2s;
 }
 
-.showcase-chapter:hover {
-  background: color-mix(in oklab, var(--tint-tile) 65%, transparent);
+@media (hover: hover) {
+  html:not([data-scrolling]) .showcase-chapter:hover {
+    background: color-mix(in oklab, var(--tint-tile) 65%, transparent);
+  }
 }
 
 .showcase-chapter.on {
@@ -2016,9 +2083,13 @@ html[data-reader-justify="true"] .reader-prose p {
   transition: color 0.2s;
 }
 
-.showcase-chapter.on .showcase-chapter-title,
-.showcase-chapter:hover .showcase-chapter-title {
+.showcase-chapter.on .showcase-chapter-title {
   color: var(--foreground);
+}
+@media (hover: hover) {
+  html:not([data-scrolling]) .showcase-chapter:hover .showcase-chapter-title {
+    color: var(--foreground);
+  }
 }
 
 .showcase-chapter-num {

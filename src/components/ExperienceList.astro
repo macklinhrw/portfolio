@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { inlineMarkdown } from "@/lib/inline-markdown";
 
 interface Props {
   items: CollectionEntry<"experience">[];
@@ -7,20 +8,6 @@ interface Props {
 }
 
 const { items, class: className } = Astro.props;
-
-/** Splits a highlight on Markdown-style `[text](url)` links. */
-const linkPattern = /\[([^\]]+)\]\(([^)\s]+)\)/g;
-function highlightParts(text: string) {
-  const parts: ({ text: string; href?: string })[] = [];
-  let last = 0;
-  for (const m of text.matchAll(linkPattern)) {
-    if (m.index > last) parts.push({ text: text.slice(last, m.index) });
-    parts.push({ text: m[1], href: m[2] });
-    last = m.index + m[0].length;
-  }
-  if (last < text.length) parts.push({ text: text.slice(last) });
-  return parts;
-}
 ---
 
 <ol class:list={["-mx-4 flex flex-col gap-2", className]}>
@@ -55,17 +42,7 @@ function highlightParts(text: string) {
             {highlights.length > 0 && (
               <ul class="experience-highlights">
                 {highlights.map((h) => (
-                  <li>
-                    {highlightParts(h).map((part) =>
-                      part.href ? (
-                        <a href={part.href} class="experience-link">
-                          {part.text}
-                        </a>
-                      ) : (
-                        part.text
-                      ),
-                    )}
-                  </li>
+                  <li set:html={inlineMarkdown(h, { linkClass: "experience-link" })} />
                 ))}
               </ul>
             )}
