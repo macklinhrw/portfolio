@@ -34,6 +34,8 @@ const projects = defineCollection({
     iconImage: z.string().optional(),
     /** Public address of the live project, if it has one. */
     url: z.string().url().optional(),
+    /** Public source repositories, shown on the project page. */
+    repos: z.array(z.string().url()).default([]),
     /** Lower numbers are listed first. */
     order: z.number(),
     /**
@@ -73,6 +75,8 @@ const projects = defineCollection({
           /** The edition's About text on the project page; blank lines separate paragraphs. */
           about: z.string().optional(),
           stack: z.array(z.string()),
+          /** This edition's source repositories; replaces the project's `repos`. */
+          repos: z.array(z.string().url()).optional(),
         }),
       )
       .optional(),

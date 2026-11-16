@@ -8,6 +8,7 @@ stack: [Odin, SDL3, Metal]
 icon: mountain
 hue: 75
 order: 3
+repos: [https://github.com/macklinhrw/odincraft]
 showcase: { src: /media/projects/odincraft-island.mp4, fit: cover }
 clips:
   - src: /media/projects/odincraft-island.mp4

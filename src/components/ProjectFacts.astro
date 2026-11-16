@@ -5,9 +5,12 @@ interface Props {
   stack: string[];
   /** The live project's address, if it has one. */
   url?: string;
+  /** Public source repositories. */
+  repos?: string[];
 }
 
-const { period, platforms, stack, url } = Astro.props;
+const { period, platforms, stack, url, repos = [] } = Astro.props;
+const arrow = "M5 11 11 5M6 5h5v5";
 ---
 
 {/* The facts beside a project's About text: when, where it runs, what it's built with, and a link */}
@@ -42,9 +45,26 @@ const { period, platforms, stack, url } = Astro.props;
           <a href={url} class="project-facts-link">
             {new URL(url).hostname}
             <svg class="project-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 11 11 5M6 5h5v5" />
+              <path d={arrow} />
             </svg>
           </a>
+        </dd>
+      </>
+    )
+  }
+  {
+    repos.length > 0 && (
+      <>
+        <dt>GitHub</dt>
+        <dd class="flex flex-col gap-1.5">
+          {repos.map((repo) => (
+            <a href={repo} class="project-facts-link">
+              {new URL(repo).pathname.split("/").pop()}
+              <svg class="project-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d={arrow} />
+              </svg>
+            </a>
+          ))}
         </dd>
       </>
     )

@@ -15,6 +15,7 @@ editions:
     about: >-
       The mobile app ships with a prebuilt SQLite database, so dictionary search, word pages, decks and stroke-order practice all work without a connection. Japanese entries add pitch-accent diagrams and kanji breakdowns, and pitch cards review a word's accent alongside its reading. Behind it is a content pipeline that builds that database from dictionary data, example sentences, stroke-order data and pitch-accent data.
     stack: [React Native, Expo, SQLite]
+    repos: [https://github.com/macklinhrw/remlang]
   - label: Web · Chinese
     period: Mar 2023 – Jul 2025
     platforms: Web
@@ -22,6 +23,7 @@ editions:
     about: >-
       The web app is the Chinese side of Remlang: a dictionary, decks built from HSK levels or shared by the community, spaced-repetition review with statistics, and saved readings. It's built with Next.js, tRPC and Drizzle on PostgreSQL.
     stack: [Next.js, tRPC, PostgreSQL]
+    repos: [https://github.com/macklinhrw/remlang-web]
 showcase: { src: /media/projects/remlang-handwriting.mp4, fit: contain }
 clips:
   - src: /media/projects/remlang-handwriting.mp4

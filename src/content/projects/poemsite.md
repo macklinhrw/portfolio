@@ -9,6 +9,7 @@ icon: feather
 hue: 10
 url: https://huntyreeve.com
 order: 4
+repos: [https://github.com/macklinhrw/poetry-site]
 showcase: { src: /media/projects/poemsite-carousel.mp4, fit: cover }
 clips:
   - src: /media/projects/poemsite-carousel.mp4

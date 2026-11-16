@@ -91,8 +91,8 @@
     --brand-foreground: oklch(0.42 0.16 32);
     --link: oklch(0.52 0.19 32);
     --selection: oklch(0.7 0.15 32 / 0.28);
-    /* "Macklin" in the hero greeting, over the photo */
-    --hero-name: oklch(0.82 0.11 45);
+    /* "Macklin" in the hero greeting, over the misty photo */
+    --hero-name: oklch(0.68 0.21 38);
     /* The same in both themes: Geist is variable, so any weight change would rewrap text on switch */
     --body-weight: 420;
     --sidebar: oklch(0.985 0 0);
@@ -748,16 +748,15 @@ html[data-theme-transition="fade"]::view-transition-group(root) {
   background: radial-gradient(60% 45% at 52% 48%, oklch(0.72 0.15 45 / 0.28), transparent 70%);
 }
 
-/* Light: the photo in full colour behind the greeting, solid under the text and then melting
-   into the paper below it, like mist off the lake. The fade starts under the greeting (so the
-   light text always sits on photo) and finishes just below the hero; the wash is absolutely
-   positioned, so reaching past the hero moves nothing. The stops follow an ease-in-out curve
-   so the fade has no visible start line. No parallax: the photo would slide over the content. */
+/* Light: the dusk photo lifted into a pale morning mist over the paper,
+   so the greeting reads dark-on-light like the rest of the page. It melts into the paper below
+   the hero; the wash is absolutely positioned, so reaching past the hero moves nothing. The
+   stops follow an ease-in-out curve so the fade has no visible start line. No parallax: the
+   photo would slide over the content. */
 :root:not(.dark) .hero-wash {
   top: 0;
   bottom: -3rem;
   overflow: hidden;
-  background: #141a1d;
   -webkit-mask-image: linear-gradient(
     to bottom,
     #000 0,
@@ -793,8 +792,9 @@ html[data-theme-transition="fade"]::view-transition-group(root) {
 }
 
 :root:not(.dark) .hero-wash .hero-photo {
-  opacity: 1;
-  filter: saturate(1.15) brightness(1.08);
+  /* Faded over the paper rather than brightened, so the snow cap keeps its edge against the sky */
+  opacity: 0.55;
+  filter: grayscale(0.2) brightness(1.35) contrast(1.05);
   animation: none;
 }
 
@@ -803,17 +803,38 @@ html[data-theme-transition="fade"]::view-transition-group(root) {
   display: none;
 }
 
-/* On the light band the greeting reads light-on-photo, so the hero gets its own text tones */
+/* On the light mist the greeting is dark text lifted off the photo by a soft paper-coloured
+   glow (the light-theme counterpart of the dark glow it needs over the night photo), and a faint
+   wash of paper behind the text block so the mountain doesn't run through the letters */
 :root:not(.dark) .home-hero {
-  --foreground: #fbfaf6;
-  --subtle-foreground: #e6e7e9;
-  --muted-foreground: #cfd1d5;
-  --hover: rgb(255 255 255 / 0.16);
+  /* Deep ink blue rather than black, so the text separates from the grey mountain by hue as well
+     as by lightness (and echoes the dark theme's dusk blue) */
+  --foreground: oklch(0.27 0.07 265);
+  --subtle-foreground: oklch(0.33 0.06 265);
   color: var(--foreground);
 }
 
-:root:not(.dark) .home-hero h1 {
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.45), 0 0 18px rgb(0 0 0 / 0.35);
+:root:not(.dark) .home-hero h1,
+:root:not(.dark) .home-hero p {
+  text-shadow:
+    0 0 1px var(--background),
+    0 0 2px var(--background),
+    0 0 4px var(--background),
+    0 0 8px var(--background),
+    0 0 16px var(--background),
+    0 0 30px var(--background),
+    0 0 50px var(--background);
+}
+
+:root:not(.dark) .hero-wash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    30% 30% at 24% 40%,
+    color-mix(in oklab, var(--background) 65%, transparent),
+    transparent 100%
+  );
 }
 
 .hero-name {
@@ -1677,6 +1698,17 @@ html[data-reader-justify="true"] .reader-prose p {
 .experience-highlights li::marker {
   color: color-mix(in oklab, var(--brand) 80%, transparent);
 }
+.experience-link {
+  color: var(--subtle-foreground);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--brand) 60%, transparent);
+  text-underline-offset: 3px;
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+.experience-link:hover {
+  color: var(--foreground);
+  text-decoration-color: var(--brand);
+}
 .experience-row .project-stack {
   margin-top: 14px;
 }
@@ -1719,6 +1751,43 @@ html[data-reader-justify="true"] .reader-prose p {
   align-items: flex-end;
   justify-content: space-between;
   gap: 12px 24px;
+}
+
+.project-head-side {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+}
+
+/* GitHubButton.astro: the project's repository, a pill in the project's colour */
+.github-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--tint-wash);
+  box-shadow: inset 0 0 0 1px var(--tint-edge);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--foreground);
+  white-space: nowrap;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+.github-button[hidden] {
+  display: none;
+}
+.github-button:hover {
+  background: var(--tint-tile);
+  color: var(--tint-ink);
+}
+.github-button svg {
+  width: 17px;
+  height: 17px;
 }
 
 /* Tabs for a project with editions (Remlang: Mobile and Web), a segmented control */
@@ -1824,6 +1893,8 @@ html[data-reader-justify="true"] .reader-prose p {
 .project-facts-link {
   display: inline-flex;
   align-items: center;
+  gap: 2px;
+  white-space: nowrap;
 }
 
 .project-facts-link:hover .project-arrow {

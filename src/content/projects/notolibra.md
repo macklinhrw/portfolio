@@ -9,6 +9,7 @@ hue: 295
 tagline: Notes, the web, PDFs, ebooks and AI chat over one folder of Markdown.
 iconImage: /media/projects/notolibra-icon.svg
 order: 1
+repos: [https://github.com/macklinhrw/notolibra, https://github.com/macklinhrw/notolibra-engine]
 showcase: { src: /media/projects/notolibra-3.mp4, fit: cover }
 clips:
   - src: /media/projects/notolibra-3.mp4
