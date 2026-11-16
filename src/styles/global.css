@@ -751,8 +751,8 @@ html[data-theme-transition="fade"]::view-transition-group(root) {
 /* Light: the dusk photo lifted into a pale morning mist over the paper,
    so the greeting reads dark-on-light like the rest of the page. It melts into the paper below
    the hero; the wash is absolutely positioned, so reaching past the hero moves nothing. The
-   stops follow an ease-in-out curve so the fade has no visible start line. No parallax: the
-   photo would slide over the content. */
+   stops follow an ease-in-out curve so the fade has no visible start line. The parallax runs
+   as in dark; the wash clips the photo, so it slides down within the hero and fades out. */
 :root:not(.dark) .hero-wash {
   top: 0;
   bottom: -3rem;
@@ -795,7 +795,6 @@ html[data-theme-transition="fade"]::view-transition-group(root) {
   /* Faded over the paper rather than brightened, so the snow cap keeps its edge against the sky */
   opacity: 0.55;
   filter: grayscale(0.2) brightness(1.35) contrast(1.05);
-  animation: none;
 }
 
 :root:not(.dark) .hero-occluder,
